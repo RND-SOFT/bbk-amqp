@@ -33,12 +33,12 @@ consumer.run msg_stream
 
 publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(direct: '', test: 'test')
 
-# msg =  msg_stream.pop
+msg =  msg_stream.pop
 
-# puts msg.properties
-# puts msg.headers
-# puts msg.payload
-# puts msg.body
+puts msg.properties
+puts msg.headers
+puts msg.payload
+puts msg.body
 
 msg = Aggredator::Api::V1::Ping.new({ message_id: 111, reply_to: :test }, {})
 result = Aggredator::Dispatcher::Result.new("mq://test@#{dest_queue.name}", msg)

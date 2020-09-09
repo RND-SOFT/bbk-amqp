@@ -1,7 +1,25 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+
+require 'bunny-mock'
+require 'simplecov'
+require 'simplecov-console'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+                                                                 SimpleCov::Formatter::HTMLFormatter, # for gitlab
+                                                                 SimpleCov::Formatter::Console # for developers
+                                                               ])
+
+SimpleCov.start do
+  add_filter do |source_file|
+    source_file.filename.start_with? File.join(Dir.pwd, 'spec')
+  end
+end
+
 require 'aggredator/amqp'
+
+Dir[File.join(__dir__, 'support', '**', '*.rb')].sort.each { |f| require f}
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
