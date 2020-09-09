@@ -1,5 +1,6 @@
 require 'active_support'
 require 'active_support/core_ext'
+require 'aggredator/app'
 require 'aggredator/amqp/version'
 require 'aggredator/amqp/utils'
 require 'aggredator/amqp/message'

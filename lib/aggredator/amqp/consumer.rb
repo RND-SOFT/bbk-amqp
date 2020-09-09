@@ -7,11 +7,16 @@ module Aggredator
       attr_reader :connection, :queue, :options
 
       DEFAULT_OPTIONS = {}
+      PROTOCOLS = %i[mq amqp amqps]
 
       def initialize(connection, queue, options = {})
         @connection = connection
         @queue = queue
         @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
+      end
+
+      def protocols
+        PROTOCOLS
       end
 
       def prepare; end

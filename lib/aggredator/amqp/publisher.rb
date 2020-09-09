@@ -1,3 +1,4 @@
+require 'set'
 require 'concurrent'
 
 module Aggredator
@@ -5,26 +6,31 @@ module Aggredator
     class Publisher
 
       HEADER_PROP_FIELDS = %i[user_id message_id reply_to correlation_id]
+      PROTOCOLS = %i[mq amqp amqps]
 
-      attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages
+      attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
 
       def initialize(connection, domains, logger: Logger.new(IO::NULL))
         @connection = connection
+        @channel = connection.channel
         @domains = domains
         @logger = logger
         @ack_map = Concurrent::Map.new
         @sended_messages = Concurrent::Map.new
-        @prepared = false
+        @configured_exchanges = Set.new
+        initialize_callbacks
+      end
+
+      def protocols
+        PROTOCOLS
       end
 
       def publish(result)
-        @channel = connection.channel
-        prepare(channel) unless @prepared
-        route = result.route
+        route = result.route      
+        raise RuntimeError.new("Unknown domain #{route.domain}") unless domains.has?(route.domain)
         exchange = domains[route.domain]
-        raise RuntimeError.new("Unknown domain #{route.domain}") if exchange.blank?
         message = result.message
-        publish_message(route.routing_key, message, exchange: exchange, options: message.properties)
+        publish_message(route.routing_key, message, exchange: exchange, options: result.properties)
       end
 
       def publish_message(routing_key, message, exchange: , options: {})
@@ -46,16 +52,6 @@ module Aggredator
         send_message(exchange, routing_key, payload, properties)
       end
 
-      def prepare(channel)
-        on_return = method(:on_return).curry(4)
-        @domains.each do |_, exchange_name|
-          exchange = channel.exchange(exchange_name, passive: true)
-          exchange.on_return &on_return.call(exchange)
-        end
-        channel.confirm_select method(:on_confirm).curry(4).call(channel)
-        @prepared = true
-      end
-
       def message_returned(args)
         message_id = args[:properties][:message_id]
         ack_id, = self.ack_map.each_pair.find {|_, msg_id| msg_id == message_id }
@@ -68,8 +64,14 @@ module Aggredator
       end
 
       def message_confirmed(args)
-        if self.ack_map.delete(args[:ack_id])
-          sended_messages.delete(args[:ack_id])&.fullfill(args)
+        ack_id = args[:ack_id]
+        if self.ack_map.delete(ack_id) && (f = sended_messages.delete(ack_id)).present?
+          neg = args[:neg]
+          if neg
+            f.reject(args)
+          else
+            f.fulfill(args)
+          end
         end
       rescue StandardError => e
         logger.error "[CRITICAL]: #{e.inspect}.\n#{e.backtrace.first(10).join("\n")}"
@@ -77,9 +79,21 @@ module Aggredator
 
       private
 
+      def initialize_callbacks
+        @domains.each {|_, exchange_name| configure_exchange(exchange_name)}
+        @channel.confirm_select method(:on_confirm).curry(4).call(channel)
+      end
+
+      def configure_exchange exchange_name
+        return if @configured_exchanges.include?(exchange_name)
+        exchange = channel.exchange(exchange_name, passive: true)
+        exchange.on_return &method(:on_return).curry(4).call(exchange)
+        @configured_exchanges << exchange_name
+      end
+
       def client_name
-        return channel.user unless channel.ssl?
-        Utils.commonname(channel.transport.tls_certificate_path)
+        return connection.user unless connection.ssl?
+        Utils.commonname(connection.transport.tls_certificate_path)
       end
 
       def on_return(exchange, basic_return, properties, body)
@@ -93,9 +107,12 @@ module Aggredator
       end
 
       def send_message(exchange, routing_key, payload, options)
+        configure_exchange(exchange)
         channel.synchronize do
           ack_id = channel.next_publish_seq_no
-          ack_map[ack_id] = options[:message_id] ||= SecureRandom.uuid
+          options[:message_id] ||= SecureRandom.uuid
+          # в случае укаказанного message_id в качестве числа, on_return вернет message_id в качестве строки
+          ack_map[ack_id] = options[:message_id].to_s
           future = sended_messages[ack_id] = Concurrent::Promises.resolvable_future
           channel.basic_publish(payload.to_json, exchange, routing_key, options)
           future

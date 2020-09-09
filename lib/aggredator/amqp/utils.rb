@@ -63,7 +63,7 @@ module Aggredator
         options[:port] ||= ENV['MQ_PORT'] || 5671
         options[:vhost] ||= ENV['MQ_VHOST'] || '/'
 
-        options[:tls] ||= true
+        options[:tls] = true unless options.has_key?(:tls)
         options[:tls_cert] ||= 'config/keys/cert.pem'
         options[:tls_key] ||= 'config/keys/key.pem'
         options[:tls_ca_certificates] ||= ['config/keys/cacert.pem']
@@ -79,7 +79,6 @@ module Aggredator
         options[:automatic_recovery]    ||= false
         options[:recovery_attempts]     ||= 0
         options[:recover_attempts]      = options[:recovery_attempts]
-      
         Bunny.new(options)
       end
 

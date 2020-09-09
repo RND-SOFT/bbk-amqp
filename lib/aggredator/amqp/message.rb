@@ -4,14 +4,15 @@ module Aggredator
   
     class Message
     
-      attr_reader :consumer, :headers, :body, :payload, :delivery_info
+      attr_reader :consumer, :headers, :body, :payload, :delivery_info, :properties
 
-      def initialize(consumer, properties, body, delivery_info)
+      def initialize(consumer, delivery_info, properties, body)
         @consumer = consumer
-        @properties = properties
+        @properties = properties.to_h
         @body = body
-        @delivery_info = delivery_info.to_h.merge(consumer: consumer, protocols: consumer.protocols)
-        @headers = properties.except(:headers).merge(properties[:headers])
+        @delivery_info = delivery_info.to_h.merge(message_consumer: consumer, protocols: consumer.protocols)
+        @headers = @properties.except(:headers).merge(properties[:headers])
+        @payload = JSON.parse(body) rescue {}
       end
 
     end

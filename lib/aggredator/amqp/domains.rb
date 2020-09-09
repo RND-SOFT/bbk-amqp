@@ -6,11 +6,11 @@ module Aggredator
       attr_reader :domains
 
       def self.default
-        self.new(outer: "",  direct: "", Aggredator::Dispatcher::ANSWER_DOMAIN => "", inner: "",  gw: "gw")
+        self.new(outer: "",  direct: "", inner: "main_exchange",  gw: "gw", Aggredator::Dispatcher::ANSWER_DOMAIN.to_sym => "")
       end
 
-      def initialize(**kwargs)
-        @domains = kwargs.with_indifferent_access
+      def initialize(domains)
+        @domains = domains.with_indifferent_access
       end
 
       def [](key)
@@ -18,7 +18,11 @@ module Aggredator
       end
 
       def each &block
-        domains.each block
+        domains.each &block
+      end
+
+      def has?(domain)
+        domains.has_key? domain
       end
 
     end
