@@ -4,18 +4,6 @@ require 'tempfile'
 
 RSpec.describe Aggredator::AMQP::Utils do
 
-  def generate_ceritificate(cn)
-    subject = "/CN=#{cn}/"
-    key = OpenSSL::PKey::RSA.new(4096)
-    cert = OpenSSL::X509::Certificate.new
-    cert.subject = cert.issuer = OpenSSL::X509::Name.parse(subject)
-    cert.not_before = Time.now
-    cert.not_after = Time.now + 1.hour
-    cert.public_key = key.public_key
-    cert.sign key, OpenSSL::Digest::SHA1.new
-    cert
-  end
-
   context 'pop message' do
 
     let(:connection) { BunnyMock.new }
@@ -50,7 +38,7 @@ RSpec.describe Aggredator::AMQP::Utils do
 
   it '#commonname' do
     cn = SecureRandom.hex
-    cert = generate_ceritificate(cn)
+    cert = generate_certificate(cn)
     tf = Tempfile.new
     tf.write cert.to_pem
     tf.flush

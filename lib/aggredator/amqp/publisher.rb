@@ -71,36 +71,7 @@ module Aggredator
       end
 
       private
-
-      # Message returned process
-      # @note Reject exists message sended promise
-      # @param args [Hash] with information about returned message
-      def message_returned(args)
-        message_id = args[:properties][:message_id]
-        ack_id, = ack_map.each_pair.find { |_, msg_id| msg_id == message_id }
-
-        sended_messages.delete(ack_id)&.reject(args) if ack_map.delete(ack_id)
-      rescue StandardError => e
-        logger.error "[CRITICAL]: #{e.inspect}.\n#{e.backtrace.first(10).join("\n")}"
-      end
-
-      # Message confirm processing
-      # @note Reject or fulfill sended message promise
-      # @param args [Hash] with information about message confirmation
-      def message_confirmed(args)
-        ack_id = args[:ack_id]
-        if ack_map.delete(ack_id) && (f = sended_messages.delete(ack_id)).present?
-          neg = args[:neg]
-          if neg
-            f.reject(args)
-          else
-            f.fulfill(args)
-          end
-        end
-      rescue StandardError => e
-        logger.error "[CRITICAL]: #{e.inspect}.\n#{e.backtrace.first(10).join("\n")}"
-      end
-
+      
       # Initialize amqp callbacks
       def initialize_callbacks
         @domains.each { |_, exchange_name| configure_exchange(exchange_name)}
@@ -126,12 +97,27 @@ module Aggredator
 
       def on_return(exchange, basic_return, properties, body)
         args = { exchange: exchange, basic_return: basic_return, properties: properties, body: body }
-        message_returned(args)
+        message_id = properties[:message_id]
+        ack_id, = ack_map.each_pair.find { |_, msg_id| msg_id == message_id }
+
+        sended_messages.delete(ack_id)&.reject(args) if ack_map.delete(ack_id)
+      rescue StandardError => e
+        # TODO: возможно стоит попробовать почистить ack_map и sended_messages
+        logger.error "[CRITICAL]: #{e.inspect}.\n#{e.backtrace.first(10).join("\n")}"
       end
 
       def on_confirm(channel, ack_id, flag, neg)
         args = { channel: channel, ack_id: ack_id, flag: flag, neg: neg}
-        message_confirmed(args)
+        if ack_map.delete(ack_id) && (f = sended_messages.delete(ack_id)).present?
+          if neg
+            f.reject(args)
+          else
+            f.fulfill(args)
+          end
+        end
+      rescue StandardError => e
+        # TODO: возможно стоит попробовать почистить ack_map и sended_messages
+        logger.error "[CRITICAL]: #{e.inspect}.\n#{e.backtrace.first(10).join("\n")}"
       end
 
       # Send amqp message and save meta information for processing
