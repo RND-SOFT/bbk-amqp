@@ -1,24 +1,27 @@
+# frozen_string_literal: true
+
 require 'bunny'
 require 'openssl'
 
 module Aggredator
-
   module AMQP
-  
     module Utils
-
       # Try get message from amqp queue
       # @param queue [Bunny::Queue]
       # @param timeout [Integer] in seconds for waiting message message in queue
       # @raise [Timeout::Error] if queue empty in timeout time duration
       # @return [Array] array with delivery_info, metadata and payload
-      def self.pop(queue, timeout=10)
+      def self.pop(queue, timeout = 10)
         unblocker = Queue.new
         consumer = queue.subscribe(block: false) do |delivery_info, metadata, payload|
           message = [
             delivery_info,
             metadata.to_hash.with_indifferent_access,
-            (JSON.parse(payload).with_indifferent_access rescue payload)
+            begin
+              JSON.parse(payload).with_indifferent_access
+            rescue StandardError
+              payload
+            end
           ]
           unblocker << message
         end
@@ -28,9 +31,8 @@ module Aggredator
         end
         result = unblocker.pop
         consumer.cancel
-        if result == :timeout
-          raise ::Timeout::Error
-        end
+        raise ::Timeout::Error if result == :timeout
+
         result
       end
 
@@ -39,7 +41,7 @@ module Aggredator
       # @return [String] certificate CN attribute value
       def self.commonname(cert_path)
         cert = OpenSSL::X509::Certificate.new(File.read(cert_path))
-        cert.subject.to_a.find{|name, _, _| name == 'CN'}[1]
+        cert.subject.to_a.find { |name, _, _| name == 'CN'}[1]
       end
 
       # Set default options and create non started connection to amqp
@@ -63,7 +65,7 @@ module Aggredator
         options[:port] ||= ENV['MQ_PORT'] || 5671
         options[:vhost] ||= ENV['MQ_VHOST'] || '/'
 
-        options[:tls] = true unless options.has_key?(:tls)
+        options[:tls] = true unless options.key?(:tls)
         options[:tls_cert] ||= 'config/keys/cert.pem'
         options[:tls_key] ||= 'config/keys/key.pem'
         options[:tls_ca_certificates] ||= ['config/keys/cacert.pem']
@@ -72,18 +74,15 @@ module Aggredator
         options[:verify] = true if options[:verify]
         options[:verify_peer] = options[:verify]
         options[:verify_ssl] = options[:verify]
-        
+
         options[:auth_mechanism] ||= 'EXTERNAL'
 
         options[:automatically_recover] ||= false
         options[:automatic_recovery]    ||= false
         options[:recovery_attempts]     ||= 0
-        options[:recover_attempts]      = options[:recovery_attempts]
+        options[:recover_attempts] = options[:recovery_attempts]
         Bunny.new(options)
       end
-
     end
-
   end
-
 end

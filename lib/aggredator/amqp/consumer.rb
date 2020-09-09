@@ -1,13 +1,12 @@
+# frozen_string_literal: true
+
 module Aggredator
-
   module AMQP
-  
     class Consumer
-
       attr_reader :connection, :queue, :options
 
-      DEFAULT_OPTIONS = {}
-      PROTOCOLS = %i[mq amqp amqps]
+      DEFAULT_OPTIONS = {}.freeze
+      PROTOCOLS = %i[mq amqp amqps].freeze
 
       def initialize(connection, queue, options = {})
         @connection = connection
@@ -27,9 +26,7 @@ module Aggredator
       def run(msg_stream)
         prepare
         @channel = @connection.channel
-        if queue.is_a?(String)
-          @queue = @channel.queue(queue, passive: true)
-        end
+        @queue = @channel.queue(queue, passive: true) if queue.is_a?(String)
         queue.subscribe(block: false, manual_ack: true) do |delivery_info, metadata, payload|
           message = Message.new(self, delivery_info, metadata, payload)
           msg_stream << message
@@ -55,9 +52,6 @@ module Aggredator
       def close
         @channel.close
       end
-
     end
-
   end
-
 end

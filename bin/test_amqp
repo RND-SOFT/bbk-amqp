@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'byebug'
 require 'aggredator/amqp'
@@ -15,14 +16,14 @@ AUTH_MECHANISM = 'PLAIN'
 
 connection = Aggredator::AMQP::Utils.create_connection(
   host: HOST, port: PORT, vhost: VHOST,
-  user: USER,password: PASS,
+  user: USER, password: PASS,
   tls: false,
-  auth_mechanism: AUTH_MECHANISM,
+  auth_mechanism: AUTH_MECHANISM
 )
 connection.start
 channel = connection.channel
 
-queue = channel.queue("source", auto_delete: true)
+queue = channel.queue('source', auto_delete: true)
 dest_queue = channel.queue('destination', auto_delete: true)
 
 consumer = Aggredator::AMQP::Consumer.new connection, queue.name
@@ -30,16 +31,16 @@ consumer = Aggredator::AMQP::Consumer.new connection, queue.name
 msg_stream = Queue.new
 consumer.run msg_stream
 
-publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(direct: "", test: "test")
+publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(direct: '', test: 'test')
 
 # msg =  msg_stream.pop
- 
+
 # puts msg.properties
 # puts msg.headers
 # puts msg.payload
 # puts msg.body
 
-msg = Aggredator::Api::V1::Ping.new({message_id: 111, reply_to: :test}, {})
+msg = Aggredator::Api::V1::Ping.new({ message_id: 111, reply_to: :test }, {})
 result = Aggredator::Dispatcher::Result.new("mq://test@#{dest_queue.name}", msg)
 
 future = publisher.publish result
@@ -48,4 +49,6 @@ sleep 15
 
 future.then do
   puts 'completed'
+end.rescue do
+  puts 'failed'
 end

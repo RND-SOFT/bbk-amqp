@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 module Aggredator
   module AMQP
     # Store for amqp domains. Domain is pair: domain name and exchange name.
     class Domains
-
       attr_reader :domains
 
       # Build default domains - common for v1 amqp aggredator services
       def self.default
-        self.new(outer: "",  direct: "", inner: "main_exchange",  gw: "gw", Aggredator::Dispatcher::ANSWER_DOMAIN.to_sym => "")
+        new(outer: '', direct: '', inner: 'main_exchange', gw: 'gw', Aggredator::Dispatcher::ANSWER_DOMAIN.to_sym => '')
       end
 
-      def initialize(domains={})
+      def initialize(domains = {})
         @domains = domains.with_indifferent_access
       end
 
@@ -22,17 +23,16 @@ module Aggredator
       end
 
       # Each method implementation for object iteration
-      def each &block
-        domains.each &block
+      def each(&block)
+        domains.each(&block)
       end
 
       # Check if store has information about domain
       # @param domain_name [String] domain name
       # @return [Boolean] has information about domain
       def has?(domain_name)
-        domains.has_key? domain_name
+        domains.key? domain_name
       end
-
     end
   end
 end
