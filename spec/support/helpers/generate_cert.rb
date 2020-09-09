@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GenerateCert
+
   def generate_certificate(cn)
     subject = "/CN=#{cn}/"
     key = OpenSSL::PKey::RSA.new(4096)
@@ -12,4 +13,6 @@ module GenerateCert
     cert.sign key, OpenSSL::Digest::SHA1.new
     cert
   end
+
 end
+

@@ -5,3 +5,4 @@ RSpec.describe Aggredator::AMQP do
     expect(Aggredator::AMQP::VERSION).not_to be nil
   end
 end
+

@@ -118,3 +118,4 @@ RSpec.describe Aggredator::AMQP::Publisher do
     end
   end
 end
+

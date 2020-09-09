@@ -8,3 +8,4 @@ RSpec.configure do |config|
   config.include RandomHash
   config.include GenerateCert
 end
+

@@ -66,3 +66,4 @@ RSpec.describe Aggredator::AMQP::Consumer do
     subject.close
   end
 end
+

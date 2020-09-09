@@ -3,14 +3,15 @@
 module Aggredator
   module AMQP
     class Consumer
+
       attr_reader :connection, :queue_name, :queue, :options
 
       DEFAULT_OPTIONS = {
-        consumer_pool_size: 3,
+        consumer_pool_size:               3,
         consumer_pool_abort_on_exception: true,
-        prefetch_size: 10,
-        requeue_on_reject: false,
-        consumer_tag: nil
+        prefetch_size:                    10,
+        requeue_on_reject:                false,
+        consumer_tag:                     nil
       }.freeze
       PROTOCOLS = %i[mq amqp amqps].freeze
 
@@ -34,8 +35,8 @@ module Aggredator
         @channel = @connection.create_channel(nil, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception])
         @queue = @channel.queue(queue_name, passive: true)
         subscribe_opts = {
-          block: false,
-          manual_ack: true,
+          block:        false,
+          manual_ack:   true,
           consumer_tag: options[:consumer_tag]
         }.compact
         queue.subscribe(subscribe_opts) do |delivery_info, metadata, payload|
@@ -65,6 +66,8 @@ module Aggredator
       def close
         @channel.close
       end
+
     end
   end
 end
+

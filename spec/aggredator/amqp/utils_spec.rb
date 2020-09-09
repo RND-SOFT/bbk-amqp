@@ -49,3 +49,4 @@ RSpec.describe Aggredator::AMQP::Utils do
     described_class.create_connection
   end
 end
+

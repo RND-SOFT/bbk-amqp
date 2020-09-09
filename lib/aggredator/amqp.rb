@@ -14,3 +14,4 @@ module Aggredator
   module AMQP
   end
 end
+

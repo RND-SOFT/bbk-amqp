@@ -52,3 +52,4 @@ future.then do
 end.rescue do
   puts 'failed'
 end
+

@@ -6,6 +6,7 @@ require 'openssl'
 module Aggredator
   module AMQP
     module Utils
+
       # Try get message from amqp queue
       # @param queue [Bunny::Queue]
       # @param timeout [Integer] in seconds for waiting message message in queue
@@ -41,7 +42,7 @@ module Aggredator
       # @return [String] certificate CN attribute value
       def self.commonname(cert_path)
         cert = OpenSSL::X509::Certificate.new(File.read(cert_path))
-        cert.subject.to_a.find { |name, _, _| name == 'CN'}[1]
+        cert.subject.to_a.find {|name, _, _| name == 'CN' }[1]
       end
 
       # Set default options and create non started connection to amqp
@@ -83,6 +84,8 @@ module Aggredator
         options[:recover_attempts] = options[:recovery_attempts]
         Bunny.new(options)
       end
+
     end
   end
 end
+

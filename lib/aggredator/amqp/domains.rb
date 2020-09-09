@@ -4,6 +4,7 @@ module Aggredator
   module AMQP
     # Store for amqp domains. Domain is pair: domain name and exchange name.
     class Domains
+
       attr_reader :domains
 
       # Build default domains - common for v1 amqp aggredator services
@@ -33,6 +34,8 @@ module Aggredator
       def has?(domain_name)
         domains.key? domain_name
       end
+
     end
   end
 end
+

@@ -13,3 +13,4 @@ require 'aggredator/amqp'
 
 require 'irb'
 IRB.start(__FILE__)
+
