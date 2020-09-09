@@ -1,4 +1,6 @@
-Dir.glob(File.join(__dir__, 'helpers', '*.rb')).each do |r|
+# frozen_string_literal: true
+
+Dir.glob(File.join(__dir__, 'helpers', '*.rb')).sort.each do |r|
   require r
 end
 

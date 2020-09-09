@@ -1,19 +1,19 @@
+# frozen_string_literal: true
+
 require 'bunny'
 require 'openssl'
 require 'tempfile'
 
 RSpec.describe Aggredator::AMQP::Utils do
-
   context 'pop message' do
-
     let(:connection) { BunnyMock.new }
-    let(:channel) { connection.channel } 
+    let(:channel) { connection.channel }
     let(:queue) { channel.queue }
 
-    it 'timeout error'  do
-      expect {
+    it 'timeout error' do
+      expect do
         described_class.pop queue, 1
-      }.to raise_error(Timeout::Error)
+      end.to raise_error(Timeout::Error)
     end
 
     it 'got json answer' do
@@ -33,7 +33,6 @@ RSpec.describe Aggredator::AMQP::Utils do
       expect(result.size).to eq 3
       expect(result.last).to eq payload
     end
-
   end
 
   it '#commonname' do
@@ -49,5 +48,4 @@ RSpec.describe Aggredator::AMQP::Utils do
     expect(Bunny).to receive(:new)
     described_class.create_connection
   end
-
 end

@@ -71,10 +71,10 @@ module Aggredator
       end
 
       private
-      
+
       # Initialize amqp callbacks
       def initialize_callbacks
-        @domains.each { |_, exchange_name| configure_exchange(exchange_name)}
+        @domains.each { |_, exchange_name| configure_exchange(exchange_name) }
         @channel.confirm_select method(:on_confirm).curry(4).call(channel)
       end
 
@@ -107,7 +107,7 @@ module Aggredator
       end
 
       def on_confirm(channel, ack_id, flag, neg)
-        args = { channel: channel, ack_id: ack_id, flag: flag, neg: neg}
+        args = { channel: channel, ack_id: ack_id, flag: flag, neg: neg }
         if ack_map.delete(ack_id) && (f = sended_messages.delete(ack_id)).present?
           if neg
             f.reject(args)

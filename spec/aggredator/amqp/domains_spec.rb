@@ -1,5 +1,6 @@
-RSpec.describe Aggredator::AMQP::Domains do
+# frozen_string_literal: true
 
+RSpec.describe Aggredator::AMQP::Domains do
   it 'default' do
     domains = described_class.default
     expect(domains['outer']).to eq ''
@@ -19,5 +20,4 @@ RSpec.describe Aggredator::AMQP::Domains do
     expect(obj.has?(:a)).to be_truthy
     expect(obj.has?(:b)).to be_falsey
   end
-
 end

@@ -33,7 +33,7 @@ consumer.run msg_stream
 
 publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(direct: '', test: 'test')
 
-msg =  msg_stream.pop
+msg = msg_stream.pop
 
 puts msg.properties
 puts msg.headers

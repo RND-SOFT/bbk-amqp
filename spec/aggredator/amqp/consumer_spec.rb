@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 RSpec.describe Aggredator::AMQP::Consumer do
-  
   let(:connection) { BunnyMock.new }
   let(:queue_name) { SecureRandom.hex }
   let(:stream) { [] }
   let(:payload) { random_hash }
   let(:props) { random_hash.merge(headers: random_hash) }
-
 
   subject { described_class.new connection, queue_name }
 
@@ -19,7 +19,7 @@ RSpec.describe Aggredator::AMQP::Consumer do
     expect(connection.queues).not_to be_empty
     queue = connection.queues.values.first
     queue.publish payload.to_json, props
-    
+
     expect(stream.size).to eq 1
     msg = stream.pop
     expect(msg.headers).to include(props[:headers])
@@ -65,5 +65,4 @@ RSpec.describe Aggredator::AMQP::Consumer do
     expect(channel).to receive(:close)
     subject.close
   end
-
 end
