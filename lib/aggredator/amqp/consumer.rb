@@ -15,12 +15,15 @@ module Aggredator
         @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
       end
 
+      # Return protocol list which consumer support
       def protocols
         PROTOCOLS
       end
 
       def prepare; end
 
+      # Running non blocking consumer
+      # @param msg_stream [Enumerable] - object with << method
       def run(msg_stream)
         prepare
         @channel = @connection.channel
@@ -34,14 +37,21 @@ module Aggredator
         msg_stream
       end
 
+      # Ack incoming message and not send answer.
+      # @note answer should processing amqp publisher
+      # @param incoming [Aggredator::AMQP::Message] consumed message from amqp channel
+      # @param answer [Aggredator::Dispatcher::Result] answer message
       def ack(incoming, answer: nil)
         @channel.ack incoming.delivery_info.delivery_tag
       end
 
+      # Nack incoming message
+      # @param incoming [Aggredator::AMQP::Message] nack procesing message
       def nack(incoming)
         @channel.reject incoming.delivery_info.delivery_tag, requeue: false
       end
 
+      # Close consumer - try close amqp channel
       def close
         @channel.close
       end

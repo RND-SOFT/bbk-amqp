@@ -20,4 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'aggredator-api'
+  spec.add_development_dependency 'rspec_junit_formatter'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'simplecov-console'
+  spec.add_development_dependency 'rubycritic'
 end

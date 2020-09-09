@@ -1,7 +1,8 @@
 module Aggredator
 
   module AMQP
-  
+
+    # Store information about consumed AMQP message
     class Message
     
       attr_reader :consumer, :headers, :body, :payload, :delivery_info, :properties
