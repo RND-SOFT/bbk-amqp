@@ -5,6 +5,7 @@ require 'concurrent'
 
 module Aggredator
   module AMQP
+    # Publisher send amqp messages
     class Publisher
 
       HEADER_PROP_FIELDS = %i[user_id message_id reply_to correlation_id].freeze

@@ -53,6 +53,11 @@ dispatcher = Aggredator::Dispatcher.new handler, logger: logger
 consumer = Aggredator::AMQP::Consumer.new connection, SOURCE_QUEUE, consumer_tag: 'agg_amqp_test'
 publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(outer: '')
 
+
+watchdog = Aggredator::Middleware::Watchdog.new publisher, "mq://outer@#{SOURCE_QUEUE}", "test"
+watchdog.start
+
+dispatcher.register_middleware watchdog
 dispatcher.register_consumer consumer
 dispatcher.register_publisher publisher
 dispatcher.run
