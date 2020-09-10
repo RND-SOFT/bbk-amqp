@@ -66,7 +66,7 @@ module Aggredator
         options[:port] ||= ENV['MQ_PORT'] || 5671
         options[:vhost] ||= ENV['MQ_VHOST'] || '/'
 
-        options[:tls] = true unless options.key?(:tls)
+        options[:tls] = options.fetch(:tls, true)
         options[:tls_cert] ||= 'config/keys/cert.pem'
         options[:tls_key] ||= 'config/keys/key.pem'
         options[:tls_ca_certificates] ||= ['config/keys/cacert.pem']
