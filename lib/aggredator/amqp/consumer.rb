@@ -4,7 +4,7 @@ module Aggredator
   module AMQP
     class Consumer
 
-      attr_reader :connection, :queue_name, :queue, :options
+      attr_reader :connection, :queue_name, :queue, :options, :logger
 
       DEFAULT_OPTIONS = {
         consumer_pool_size:               3,
@@ -13,12 +13,13 @@ module Aggredator
         requeue_on_reject:                false,
         consumer_tag:                     nil
       }.freeze
-      PROTOCOLS = %i[mq amqp amqps].freeze
+      PROTOCOLS = %w[mq amqp amqps].freeze
 
       def initialize(connection, queue_name, options = {})
         @connection = connection
         @queue_name = queue_name
         @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
+        @logger = @options.fetch(:logger, Logger.new(IO::NULL))
       end
 
       # Return protocol list which consumer support
@@ -53,13 +54,15 @@ module Aggredator
       def ack(incoming, answer: nil)
         # [] - для работы тестов. В реальности вернется объект VersionedDeliveryTag у
         #  которого to_i (вызывается внутри channel.ack) вернет фактическоe число
+        logger.debug "ack message"
         @channel.ack incoming.delivery_info[:delivery_tag]
       end
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
       def nack(incoming)
-        @channel.reject incoming.delivery_info[:delivery_tag], requeue: options[:requeue_on_reject]
+        logger.info 'reject message'
+        @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
       end
 
       # Close consumer - try close amqp channel

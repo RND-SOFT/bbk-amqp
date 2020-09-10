@@ -8,7 +8,7 @@ module Aggredator
     class Publisher
 
       HEADER_PROP_FIELDS = %i[user_id message_id reply_to correlation_id].freeze
-      PROTOCOLS = %i[mq amqp amqps].freeze
+      PROTOCOLS = %w[mq amqp amqps].freeze
 
       attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
 
@@ -32,9 +32,10 @@ module Aggredator
       # Publish dispatcher result
       # @param result [Aggredator::Dispatcher::Result] sended result
       def publish(result)
+        logger.debug "Try publish dispatcher result #{result.inspect}"
         route = result.route
         result_domain = route.domain
-        raise "Unsupported protocol #{route.scheme}" unless PROTOCOLS.include?(route.scheme.to_sym)
+        raise "Unsupported protocol #{route.scheme}" unless PROTOCOLS.include?(route.scheme)
         raise "Unknown domain #{result_domain}" unless domains.has?(result_domain)
 
         exchange = domains[result_domain]
@@ -48,6 +49,7 @@ module Aggredator
       # @param exchange [Object] exchange for sending message
       # @param options [Hash] message properties
       def publish_message(routing_key, message, exchange:, options: {})
+        logger.debug "Try publish message #{message.headers.inspect}"
         properties = {
           persistent:  true,
           mandatory:   true,
@@ -65,6 +67,7 @@ module Aggredator
       # @param properties [Hash] amqp message properties
       # @param headers [Messag]
       def raw_publish(routing_key, exchange:, properties: {}, headers: {}, payload: {})
+        logger.debug "Publish raw message #{headers.inspect}"  
         properties = properties.deep_dup
         properties[:headers] = properties.fetch(:headers, {}).merge headers
         properties = properties.merge(headers.select {|k| HEADER_PROP_FIELDS.include? k }.compact).symbolize_keys
@@ -83,6 +86,7 @@ module Aggredator
         def configure_exchange(exchange_name)
           return if @configured_exchanges.include?(exchange_name)
 
+          logger.debug "Configure on_return callback for exchange #{exchange_name}"
           exchange = channel.exchange(exchange_name, passive: true)
           exchange.on_return(&method(:on_return).curry(4).call(exchange))
           @configured_exchanges << exchange_name
@@ -99,6 +103,7 @@ module Aggredator
         def on_return(exchange, basic_return, properties, body)
           args = { exchange: exchange, basic_return: basic_return, properties: properties, body: body }
           message_id = properties[:message_id]
+          logger.info "Message with message_id #{message_id} returned #{basic_return.inspect}"
           ack_id, = ack_map.each_pair.find {|_, msg_id| msg_id == message_id }
 
           sended_messages.delete(ack_id)&.reject(args) if ack_map.delete(ack_id)
@@ -108,6 +113,7 @@ module Aggredator
         end
 
         def on_confirm(channel, ack_id, flag, neg)
+          logger.debug "Call confirmed callback for message with ack_id #{ack_id} with neg=#{neg}"
           args = { channel: channel, ack_id: ack_id, flag: flag, neg: neg }
           if ack_map.delete(ack_id) && (f = sended_messages.delete(ack_id)).present?
             if neg

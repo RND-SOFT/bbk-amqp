@@ -55,7 +55,7 @@ RSpec.describe Aggredator::AMQP::Consumer do
 
     msg = stream.pop
     delivery_tag = msg.delivery_info[:delivery_tag]
-    expect(channel).to receive(:reject).with(delivery_tag, requeue: false)
+    expect(channel).to receive(:reject).with(delivery_tag, false)
     subject.nack msg
   end
 

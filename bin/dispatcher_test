@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'aggredator/app'
+require 'aggredator/amqp'
+require 'aggredator/api/v1'
+require 'byebug'
+
+SOURCE_QUEUE = 'source'
+DESTINATION_QUEUE = 'destination'
+
+class Processor < Aggredator::Processors::Base
+
+  attr_reader :logger
+
+  def initialize logger=Logger.new(IO::NULL)
+    @logger = logger
+  end
+
+  def self.rule
+    [:meta, {headers: {}}]
+  end
+
+  def process message, results: []
+    logger.info "Get message #{message.inspect}"
+    # for checking that message not acked
+    # sleep 5
+    results << Aggredator::Dispatcher::Result.new("mq://outer@destination", Aggredator::Api::V1::Message.new({}, {data: SecureRandom.hex}))
+  end
+
+end
+
+logger = Logger.new STDOUT
+
+conn_options = {
+  host: 'infra-1.rnds.local',
+  port: 5672,
+  vhost: 'test',
+  user: 'admin',
+  pass: 'bcsprod',
+  auth_mechanism: 'PLAIN',
+  tls: false
+}
+
+connection = Aggredator::AMQP::Utils.create_connection conn_options
+connection.start
+
+handler = Aggredator::Handler.new
+handler.register Processor, logger
+
+dispatcher = Aggredator::Dispatcher.new handler, logger: logger
+
+consumer = Aggredator::AMQP::Consumer.new connection, SOURCE_QUEUE, consumer_tag: 'agg_amqp_test'
+publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(outer: '')
+
+dispatcher.register_consumer consumer
+dispatcher.register_publisher publisher
+dispatcher.run
