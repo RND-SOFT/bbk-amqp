@@ -67,7 +67,7 @@ module Aggredator
       # @param properties [Hash] amqp message properties
       # @param headers [Messag]
       def raw_publish(routing_key, exchange:, properties: {}, headers: {}, payload: {})
-        logger.debug "Publish raw message #{headers.inspect}"  
+        logger.debug "Publish raw message #{headers.inspect}"
         properties = properties.deep_dup
         properties[:headers] = properties.fetch(:headers, {}).merge headers
         properties = properties.merge(headers.select {|k| HEADER_PROP_FIELDS.include? k }.compact).symbolize_keys

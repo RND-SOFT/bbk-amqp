@@ -54,7 +54,7 @@ module Aggredator
       def ack(incoming, answer: nil)
         # [] - для работы тестов. В реальности вернется объект VersionedDeliveryTag у
         #  которого to_i (вызывается внутри channel.ack) вернет фактическоe число
-        logger.debug "ack message"
+        logger.debug 'ack message'
         @channel.ack incoming.delivery_info[:delivery_tag]
       end
 

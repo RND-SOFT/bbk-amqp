@@ -13,19 +13,19 @@ class Processor < Aggredator::Processors::Base
 
   attr_reader :logger
 
-  def initialize logger=Logger.new(IO::NULL)
+  def initialize(logger = Logger.new(IO::NULL))
     @logger = logger
   end
 
   def self.rule
-    [:meta, {headers: {}}]
+    [:meta, { headers: {} }]
   end
 
   def process message, results: []
     logger.info "Get message #{message.inspect}"
     # for checking that message not acked
     # sleep 5
-    results << Aggredator::Dispatcher::Result.new("mq://outer@destination", Aggredator::Api::V1::Message.new({}, {data: SecureRandom.hex}))
+    results << Aggredator::Dispatcher::Result.new('mq://outer@destination', Aggredator::Api::V1::Message.new({}, {data: SecureRandom.hex}))
   end
 
 end
@@ -33,13 +33,13 @@ end
 logger = Logger.new STDOUT
 
 conn_options = {
-  host: 'infra-1.rnds.local',
-  port: 5672,
-  vhost: 'test',
-  user: 'admin',
-  pass: 'bcsprod',
+  host:           'infra-1.rnds.local',
+  port:           5672,
+  vhost:          'test',
+  user:           'admin',
+  pass:           'bcsprod',
   auth_mechanism: 'PLAIN',
-  tls: false
+  tls:            false
 }
 
 connection = Aggredator::AMQP::Utils.create_connection conn_options
@@ -56,3 +56,4 @@ publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domain
 dispatcher.register_consumer consumer
 dispatcher.register_publisher publisher
 dispatcher.run
+
