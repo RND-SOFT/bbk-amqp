@@ -9,6 +9,7 @@ require 'aggredator/amqp/message'
 require 'aggredator/amqp/domains'
 require 'aggredator/amqp/publisher'
 require 'aggredator/amqp/consumer'
+require_relative 'bunny_patch'
 
 module Aggredator
   module AMQP
