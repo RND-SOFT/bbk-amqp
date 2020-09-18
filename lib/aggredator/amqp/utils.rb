@@ -71,7 +71,7 @@ module Aggredator
         options[:tls_key] ||= 'config/keys/key.pem'
         options[:tls_ca_certificates] ||= ['config/keys/cacert.pem']
 
-        options[:verify] = options[:verify] || options[:verify_peer] || options[:verify_ssl]
+        options[:verify] = options.fetch(:verify, options.fetch(:verify_peer, options.fetch(:verify_ssl, nil)))
         options[:verify] = true if options[:verify]
         options[:verify_peer] = options[:verify]
         options[:verify_ssl] = options[:verify]
