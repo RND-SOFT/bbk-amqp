@@ -60,7 +60,7 @@ module Aggredator
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
-      def nack(incoming)
+      def nack(incoming, error: nil)
         logger.info 'reject message'
         @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
       end

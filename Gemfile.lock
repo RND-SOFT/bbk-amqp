@@ -27,7 +27,7 @@ GEM
       activesupport
       builder
       terminal-table
-    aggredator-app (2.1.0.36992)
+    aggredator-app (2.1.0.37974)
       activesupport
       aggredator-api (~> 2.0)
       aggredator-client (~> 2.0)
