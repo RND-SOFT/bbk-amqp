@@ -25,7 +25,7 @@ module Aggredator
         @queue_name = @queue&.name || queue_name
 
         @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
-        @logger = @options.fetch(:logger, Logger.new(STDOUT))
+        @logger = @options.fetch(:logger, ::Logger.new(STDOUT))
       end
 
       # Return protocol list which consumer support
