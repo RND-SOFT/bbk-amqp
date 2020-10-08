@@ -40,7 +40,7 @@ module Aggredator
       def run(msg_stream)
         prepare
 
-        @channel ||= @connection.create_channel(10, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception]).tap do |ch|
+        @channel ||= @connection.create_channel(nil, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception]).tap do |ch|
           ch.prefetch(options[:prefetch_size])
         end
 
