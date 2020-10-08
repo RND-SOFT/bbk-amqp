@@ -15,11 +15,17 @@ module Aggredator
       }.freeze
       PROTOCOLS = %w[mq amqp amqps].freeze
 
-      def initialize(connection, queue_name, options = {})
+      def initialize(connection, queue_name = nil, options = {})
         @connection = connection
-        @queue_name = queue_name
+        @channel = options.delete(:channel)
+        @queue = options.delete(:queue)
+
+        raise 'queue_name or queue must be provided!' if @queue_name.nil? && queue_name.nil?
+
+        @queue_name = @queue&.name || queue_name
+
         @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
-        @logger = @options.fetch(:logger, Logger.new(IO::NULL))
+        @logger = @options.fetch(:logger, Logger.new(STDOUT))
       end
 
       # Return protocol list which consumer support
@@ -33,8 +39,13 @@ module Aggredator
       # @param msg_stream [Enumerable] - object with << method
       def run(msg_stream)
         prepare
-        @channel = @connection.create_channel(nil, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception])
-        @queue = @channel.queue(queue_name, passive: true)
+
+        @channel ||= @connection.create_channel(10, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception]).tap do |ch|
+          ch.prefetch(options[:prefetch_size])
+        end
+
+        @queue ||= @channel.queue(queue_name, passive: true)
+
         subscribe_opts = {
           block:        false,
           manual_ack:   true,

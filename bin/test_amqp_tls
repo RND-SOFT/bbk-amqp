@@ -21,15 +21,16 @@ File.write('config/keys/cacert.pem', ENV.fetch('CA_CERT'))
 File.write('config/keys/cert.pem', ENV.fetch('CLIENT_CERT'))
 File.write('config/keys/key.pem', ENV.fetch('CLIENT_KEY'))
 
-connection = Aggredator::AMQP::Utils.create_connection(
-  host: HOST, port: PORT, vhost: VHOST,
+connection = Bunny.new(
+  host: 'mq',
   tls: true,
   tls_cert: 'config/keys/cert.pem',
   tls_key: 'config/keys/key.pem',
   tls_ca_certificates: ['config/keys/cacert.pem'],
-  auth_mechanism: AUTH_MECHANISM,
-  verify: false
 )
+
+
+
 connection.start
 channel = connection.channel
 
