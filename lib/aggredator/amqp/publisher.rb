@@ -13,7 +13,7 @@ module Aggredator
 
       attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
 
-      def initialize(connection, domains, logger: Logger.new(IO::NULL))
+      def initialize(connection, domains, logger: Logger.new(STDOUT))
         @connection = connection
         @channel = connection.channel
         @domains = domains
