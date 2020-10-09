@@ -72,19 +72,15 @@ module Aggredator
       def ack(incoming, answer: nil)
         # [] - для работы тестов. В реальности вернется объект VersionedDeliveryTag у
         #  которого to_i (вызывается внутри channel.ack) вернет фактическоe число
-        @channel.synchronize do
-          logger.debug "Ack message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel: #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
-          @channel.ack incoming.delivery_info[:delivery_tag]
-        end
+        logger.debug "Ack message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel: #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
+        @channel.ack incoming.delivery_info[:delivery_tag]
       end
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
       def nack(incoming, error: nil)
-        @channel.synchronize do
-          logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
-          @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
-        end
+        logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
+        @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
       end
 
       # Close consumer - try close amqp channel
