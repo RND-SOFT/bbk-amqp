@@ -18,7 +18,6 @@ before_script:
   - *sshinit
 
 stages:
-  - tests
   - build
   - deploy
 
@@ -27,7 +26,7 @@ variables:
 
 .test:
   image: rnds/ruby:2.5-test
-  stage: tests
+  stage: build
   variables:
     COMPOSE_FILE: envs/tests/units/docker-compose.yml
     COMPOSE_PROJECT_NAME: aggamqp${CI_PIPELINE_ID}_${CI_JOB_ID}
