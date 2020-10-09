@@ -13,11 +13,14 @@ module Aggredator
 
       attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
 
-      def initialize(connection, domains, logger: ::Logger.new(STDOUT))
+      def initialize(connection, domains, logger: Aggredator::AMQP.logger)
         @connection = connection
         @channel = connection.channel
         @domains = domains
-        @logger = logger
+
+        logger = logger.respond_to?(:tagged) ? logger : ActiveSupport::TaggedLogging.new(logger)
+        @logger = Aggredator::AMQP::ProxyLogger.new(logger, tags: [self.class.to_s, "Ch##{@channel.id}"])
+
         @ack_map = Concurrent::Map.new
         @sended_messages = Concurrent::Map.new
         @configured_exchanges = Set.new
@@ -142,6 +145,7 @@ module Aggredator
             # в случае укаказанного message_id в качестве числа, on_return вернет message_id в качестве строки
             ack_map[ack_id] = options[:message_id].to_s
             future = sended_messages[ack_id] = Concurrent::Promises.resolvable_future
+            logger.debug "Publish message #{options[:message_id]} with ack: #{ack_id} to #{exchange}##{routing_key}"
             channel.basic_publish(payload.to_json, exchange, routing_key, options)
             future
           end

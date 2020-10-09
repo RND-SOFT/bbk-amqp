@@ -24,8 +24,11 @@ module Aggredator
 
         @queue_name = @queue&.name || queue_name
 
-        @options = options.deep_dup.reverse_merge(DEFAULT_OPTIONS)
-        @logger = @options.fetch(:logger, ::Logger.new(STDOUT))
+        @options = DEFAULT_OPTIONS.merge(options)
+
+        logger = @options.fetch(:logger, Aggredator::AMQP.logger)
+        logger = logger.respond_to?(:tagged) ? logger : ActiveSupport::TaggedLogging.new(logger)
+        @logger = Aggredator::AMQP::ProxyLogger.new(logger, tags: [self.class.to_s, queue_name])
       end
 
       # Return protocol list which consumer support
@@ -43,6 +46,8 @@ module Aggredator
         @channel ||= @connection.create_channel(nil, options[:consumer_pool_size], options[:consumer_pool_abort_on_exception]).tap do |ch|
           ch.prefetch(options[:prefetch_size])
         end
+
+        @logger.add_tags "Ch##{@channel.id}"
 
         @queue ||= @channel.queue(queue_name, passive: true)
 
@@ -65,14 +70,14 @@ module Aggredator
       def ack(incoming, answer: nil)
         # [] - для работы тестов. В реальности вернется объект VersionedDeliveryTag у
         #  которого to_i (вызывается внутри channel.ack) вернет фактическоe число
-        logger.debug 'ack message'
+        logger.debug "Ack message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{@channel.id}"
         @channel.ack incoming.delivery_info[:delivery_tag]
       end
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
       def nack(incoming, error: nil)
-        logger.info 'reject message'
+        logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{@channel.id}"
         @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
       end
 
