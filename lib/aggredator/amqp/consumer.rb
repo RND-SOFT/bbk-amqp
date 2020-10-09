@@ -58,7 +58,7 @@ module Aggredator
         }.compact
         queue.subscribe(subscribe_opts) do |delivery_info, metadata, payload|
           message = Message.new(self, delivery_info, metadata, payload)
-          logger.debug "Consumed message #{message.headers[:type]}[#{message.headers[:message_id]}] on channel: #{@channel.id} delivery tag: #{message.delivery_info[:delivery_tag].to_i}"
+          logger.debug "Consumed message #{message.headers[:type]}[#{message.headers[:message_id]}] on channel: #{delivery_info.channel.id}[#{delivery_info.channel.object_id}] delivery tag: #{message.delivery_info[:delivery_tag].to_i}"
 
           msg_stream << message
         end
@@ -72,14 +72,14 @@ module Aggredator
       def ack(incoming, answer: nil)
         # [] - для работы тестов. В реальности вернется объект VersionedDeliveryTag у
         #  которого to_i (вызывается внутри channel.ack) вернет фактическоe число
-        logger.debug "Ack message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel: #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
+        logger.debug "Ack message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel: #{incoming.delivery_info.channel.id}[#{incoming.delivery_info.channel.object_id}] delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
         @channel.ack incoming.delivery_info[:delivery_tag]
       end
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
       def nack(incoming, error: nil)
-        logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{@channel.id} delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
+        logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] on channel #{incoming.delivery_info.channel.id}[#{incoming.delivery_info.channel.object_id}] delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}"
         @channel.reject incoming.delivery_info[:delivery_tag], options[:requeue_on_reject]
       end
 
