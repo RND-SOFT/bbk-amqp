@@ -33,6 +33,16 @@ module Aggredator
         PROTOCOLS
       end
 
+      # Close consumer - try close amqp channel
+      def close
+        @channel.tap do |c|
+          return nil unless c
+
+          @channel = nil
+          c.close
+        end
+      end
+
       # Publish dispatcher result
       # @param result [Aggredator::Dispatcher::Result] sended result
       def publish(result)

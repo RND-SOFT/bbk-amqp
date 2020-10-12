@@ -22,6 +22,11 @@ RSpec.describe Aggredator::AMQP::Publisher do
     expect(subject.protocols).to eq described_class::PROTOCOLS
   end
 
+  it '#close' do
+    expect(subject.channel).to receive(:close)
+    subject.close
+  end
+
   # #publish_message called from publish message
   context '#publish' do
     it 'unsupported protocol' do
