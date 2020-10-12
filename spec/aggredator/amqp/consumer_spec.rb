@@ -42,6 +42,7 @@ RSpec.describe Aggredator::AMQP::Consumer do
     queue.publish payload, props
 
     msg = stream.pop
+    msg.delivery_info[:channel] = channel # set channel for mock
     delivery_tag = msg.delivery_info[:delivery_tag]
     expect(channel).to receive(:ack).with(delivery_tag)
     subject.ack msg
@@ -54,9 +55,17 @@ RSpec.describe Aggredator::AMQP::Consumer do
     queue.publish payload, props
 
     msg = stream.pop
+    msg.delivery_info[:channel] = channel # set channel for mock
     delivery_tag = msg.delivery_info[:delivery_tag]
     expect(channel).to receive(:reject).with(delivery_tag, false)
     subject.nack msg
+  end
+
+  it '#stop' do
+    subject.run(stream)
+    subscription = subject.instance_variable_get('@subscription')
+    expect(subscription).to receive(:cancel)
+    subject.stop
   end
 
   it '#close' do
