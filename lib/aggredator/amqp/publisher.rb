@@ -33,7 +33,7 @@ module Aggredator
         PROTOCOLS
       end
 
-      # Close consumer - try close amqp channel
+      # Close publisher - try close amqp channel
       def close
         @channel.tap do |c|
           return nil unless c

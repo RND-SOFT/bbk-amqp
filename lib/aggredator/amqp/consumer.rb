@@ -58,6 +58,7 @@ module Aggredator
           consumer_tag: options[:consumer_tag]
         }.compact
 
+        logger.info 'Starting...'
         @subscription = queue.subscribe(subscribe_opts) do |delivery_info, metadata, payload|
           message = Message.new(self, delivery_info, metadata, payload)
           # logger.debug "Consumed message #{message.headers[:type]}[#{message.headers[:message_id]}] on channel: #{delivery_info.channel&.id}[#{delivery_info.channel&.object_id}] delivery tag: #{message.delivery_info[:delivery_tag].to_i}"
@@ -92,6 +93,7 @@ module Aggredator
         @subscription.tap do |s|
           return nil unless s
 
+          logger.info 'Stopping...'
           @subscription = nil
           s.cancel
         end
@@ -102,8 +104,10 @@ module Aggredator
         @channel.tap do |c|
           return nil unless c
 
+          logger.info 'Closing...'
           @channel = nil
           c.close
+          logger.info 'Stopped'
         end
       end
 
