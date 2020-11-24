@@ -11,7 +11,12 @@ module Aggredator
         @consumer = consumer
         @properties = properties.to_h.with_indifferent_access
         @body = body
-        @delivery_info = delivery_info.to_h.merge(message_consumer: consumer, protocols: consumer.protocols)
+        amqp_consumer = delivery_info[:consumer]
+        @delivery_info = delivery_info.to_h.merge(
+          message_consumer: consumer,
+          protocols:        consumer.protocols,
+          queue:            amqp_consumer&.queue_name
+        )
         @headers = @properties.except(:headers).merge(properties[:headers]).with_indifferent_access
         @payload = begin
                      JSON.parse(body).with_indifferent_access

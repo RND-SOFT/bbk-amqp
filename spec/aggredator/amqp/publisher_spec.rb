@@ -80,7 +80,7 @@ RSpec.describe Aggredator::AMQP::Publisher do
         result = Aggredator::Dispatcher::Result.new('mq://direct@example', pub_message)
         future = subject.publish result
         exchange = connection.exchanges.values.last
-        exchange.call_on_return nil, {message_id: subject.ack_map.values.first}, nil
+        exchange.call_on_return nil, { message_id: subject.ack_map.values.first }, nil
         expect(future).to be_resolved
         expect(future).to be_rejected
       end
@@ -91,7 +91,7 @@ RSpec.describe Aggredator::AMQP::Publisher do
         exchange = connection.exchanges.values.last
         expect(future).to receive(:reject).and_raise('test')
         expect(subject.logger).to receive(:error)
-        exchange.call_on_return nil, {message_id: subject.ack_map.values.first}, nil
+        exchange.call_on_return nil, { message_id: subject.ack_map.values.first }, nil
       end
     end
   end

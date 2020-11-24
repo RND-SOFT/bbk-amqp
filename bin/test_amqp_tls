@@ -12,7 +12,7 @@ require 'bunny'
 HOST = ENV.fetch('MQ_HOST', 'infra.rnds.local')
 PORT = ENV.fetch('MQ_PORT', 5671)
 VHOST = ENV.fetch('MQ_VHOST', nil)
-#AUTH_MECHANISM = 'PLAIN'
+# AUTH_MECHANISM = 'PLAIN'
 AUTH_MECHANISM = 'EXTERNAL'
 
 FileUtils.mkdir_p 'config/keys'
@@ -22,11 +22,11 @@ File.write('config/keys/cert.pem', ENV.fetch('CLIENT_CERT'))
 File.write('config/keys/key.pem', ENV.fetch('CLIENT_KEY'))
 
 connection = Bunny.new(
-  host: 'mq',
-  tls: true,
-  tls_cert: 'config/keys/cert.pem',
-  tls_key: 'config/keys/key.pem',
-  tls_ca_certificates: ['config/keys/cacert.pem'],
+  host:                'mq',
+  tls:                 true,
+  tls_cert:            'config/keys/cert.pem',
+  tls_key:             'config/keys/key.pem',
+  tls_ca_certificates: ['config/keys/cacert.pem']
 )
 
 

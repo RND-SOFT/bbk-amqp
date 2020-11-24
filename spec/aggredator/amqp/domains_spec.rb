@@ -12,7 +12,7 @@ RSpec.describe Aggredator::AMQP::Domains do
 
   it '#each' do
     obj = described_class.new a: 'first', b: 'second'
-    expect(obj.each.map.to_h).to eq({ 'a' => 'first', 'b' => 'second'})
+    expect(obj.each.map.to_h).to eq({ 'a' => 'first', 'b' => 'second' })
   end
 
   it '#has?' do

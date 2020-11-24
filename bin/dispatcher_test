@@ -21,11 +21,11 @@ class Processor < Aggredator::Processors::Base
     [:meta, { headers: {} }]
   end
 
-  def process message, results: []
+  def process(message, results: [])
     logger.info "Get message #{message.inspect}"
     # for checking that message not acked
     # sleep 5
-    results << Aggredator::Dispatcher::Result.new('mq://outer@destination', Aggredator::Api::V1::Message.new({}, {data: SecureRandom.hex}))
+    results << Aggredator::Dispatcher::Result.new('mq://outer@destination', Aggredator::Api::V1::Message.new({}, { data: SecureRandom.hex }))
   end
 
 end
@@ -54,7 +54,7 @@ consumer = Aggredator::AMQP::Consumer.new connection, SOURCE_QUEUE, consumer_tag
 publisher = Aggredator::AMQP::Publisher.new connection, Aggredator::AMQP::Domains.new(outer: '')
 
 
-watchdog = Aggredator::Middleware::Watchdog.new publisher, "mq://outer@#{SOURCE_QUEUE}", "test"
+watchdog = Aggredator::Middleware::Watchdog.new publisher, "mq://outer@#{SOURCE_QUEUE}", 'test'
 watchdog.start
 
 dispatcher.register_middleware watchdog

@@ -37,7 +37,7 @@ module BunnyMock
       @confirm_callback = callback
     end
 
-    def call_confirm_callback ack_id, flag, neg
+    def call_confirm_callback(ack_id, flag, neg)
       @confirm_callback.call(ack_id, flag, neg)
     end
 
