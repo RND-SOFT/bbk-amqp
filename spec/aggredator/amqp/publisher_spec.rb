@@ -97,7 +97,6 @@ RSpec.describe Aggredator::AMQP::Publisher do
   end
 
   context '#raw_publish' do
-
     let(:props) { random_hash }
     let(:headers) { random_hash }
     let(:routing_key) { SecureRandom.hex }
@@ -117,7 +116,6 @@ RSpec.describe Aggredator::AMQP::Publisher do
       future = subject.raw_publish routing_key, exchange: '', properties: props, headers: headers, payload: payload
       expect(future).not_to be_resolved
     end
-
   end
 
   context '#client_name' do
