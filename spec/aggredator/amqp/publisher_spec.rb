@@ -96,14 +96,28 @@ RSpec.describe Aggredator::AMQP::Publisher do
     end
   end
 
-  it '#raw_publish' do
-    props = random_hash
-    headers = random_hash
-    payload = random_hash
-    routing_key = SecureRandom.hex
-    expect(subject).to receive(:send_message).and_call_original
-    future = subject.raw_publish routing_key, exchange: '', properties: props, headers: headers, payload: payload
-    expect(future).not_to be_resolved
+  context '#raw_publish' do
+
+    let(:props) { random_hash }
+    let(:headers) { random_hash }
+    let(:routing_key) { SecureRandom.hex }
+
+    it 'send not string payload' do
+      payload = random_hash
+      expect(subject).to receive(:send_message).and_call_original
+      expect(subject.channel).to receive(:basic_publish).with(payload.to_json, any_args)
+      future = subject.raw_publish routing_key, exchange: '', properties: props, headers: headers, payload: payload
+      expect(future).not_to be_resolved
+    end
+
+    it 'send string payload' do
+      payload = SecureRandom.hex
+      expect(subject).to receive(:send_message).and_call_original
+      expect(subject.channel).to receive(:basic_publish).with(payload, any_args)
+      future = subject.raw_publish routing_key, exchange: '', properties: props, headers: headers, payload: payload
+      expect(future).not_to be_resolved
+    end
+
   end
 
   context '#client_name' do

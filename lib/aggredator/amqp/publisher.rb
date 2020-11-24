@@ -156,7 +156,12 @@ module Aggredator
             ack_map[ack_id] = options[:message_id].to_s
             future = sended_messages[ack_id] = Concurrent::Promises.resolvable_future
             logger.debug "Publish message #{options[:message_id]} with ack: #{ack_id} to #{exchange}##{routing_key}"
-            channel.basic_publish(payload.to_json, exchange, routing_key, options)
+            data = if payload.is_a?(String)
+              payload
+            else
+              payload.to_json
+            end
+            channel.basic_publish(data, exchange, routing_key, options)
             future
           end
         end
