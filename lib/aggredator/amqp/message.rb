@@ -25,6 +25,26 @@ module Aggredator
                    end
       end
 
+      # Все методы идущие далее не являются частью интерфейса
+      # общего для всех сообщений, и добавлены для обеспечения совместимости
+      # с старым кодом
+
+      def user_id
+        headers[:user_id]
+      end
+
+      def message_id
+        properties[:message_id] || headers[:message_id]
+      end
+
+      def id
+        message_id
+      end
+
+      def reply_to
+        properties[:reply_to] || headers[:reply_to] || user_id
+      end
+
     end
   end
 end
