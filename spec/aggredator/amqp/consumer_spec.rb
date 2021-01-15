@@ -7,7 +7,19 @@ RSpec.describe Aggredator::AMQP::Consumer do
   let(:payload) { random_hash }
   let(:props) { random_hash.merge(headers: random_hash) }
 
-  subject { described_class.new connection, queue_name }
+  subject { described_class.new connection, queue_name: queue_name }
+
+  context '#ctor' do
+  
+    it 'pass queue_name' do
+      expect{ described_class.new(connection, queue_name: queue_name) }.not_to raise_error
+    end
+
+    it 'pass queue in options' do
+      expect{ described_class.new(connection, queue: OpenStruct.new(name: :test)) }.not_to raise_error
+    end
+
+  end
 
   it '#protocols' do
     expect(subject.protocols).to eq described_class::PROTOCOLS

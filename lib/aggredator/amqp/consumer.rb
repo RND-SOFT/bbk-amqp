@@ -16,12 +16,12 @@ module Aggredator
 
       PROTOCOLS = %w[mq amqp amqps].freeze
 
-      def initialize(connection, queue_name = nil, options = {})
+      def initialize(connection, queue_name: nil, **options)
         @connection = connection
         @channel = options.delete(:channel)
         @queue = options.delete(:queue)
 
-        raise 'queue_name or queue must be provided!' if @queue_name.nil? && queue_name.nil?
+        raise ArgumentError.new('queue_name or queue must be provided!') if @queue.nil? && queue_name.nil?
 
         @queue_name = @queue&.name || queue_name
 
