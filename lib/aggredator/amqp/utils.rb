@@ -60,6 +60,7 @@ module Aggredator
       # @option options [Boolean] :automatically_recover Allow automatic network failure recovery (default false)
       # @option options [Boolean] :automatic_recovery Alias for automatically_recover (default false)
       # @option options [Integer] :recovery_attempts  Limits the number of connection recovery attempts performed by Bunny (default 0, nil - unlimited)
+      # @option options [Boolean] :recover_from_connection_close (default false)
       # @return [Bunny::Session] non started amqp connection
       def self.create_connection(options = {})
         options[:hostname] ||= ENV['MQ_HOST'] || 'mq'
@@ -82,6 +83,7 @@ module Aggredator
         options[:automatic_recovery]    ||= false
         options[:recovery_attempts]     ||= 0
         options[:recover_attempts] = options[:recovery_attempts]
+        options[:recover_from_connection_close] ||= false
         Bunny.new(options)
       end
 
