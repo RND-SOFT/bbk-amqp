@@ -5,9 +5,9 @@ module Aggredator
     # Store information about consumed AMQP message
     class Message
 
-      attr_reader :consumer, :headers, :body, :payload, :delivery_info, :properties
+      attr_reader :consumer, :headers, :body, :payload, :delivery_info, :properties, :context
 
-      def initialize(consumer, delivery_info, properties, body)
+      def initialize(consumer, delivery_info, properties, body, context: {})
         @consumer = consumer
         @properties = properties.to_h.with_indifferent_access
         @body = body
@@ -23,6 +23,7 @@ module Aggredator
                    rescue StandardError
                      {}.with_indifferent_access
                    end
+        @context = context
       end
 
       # Все методы идущие далее не являются частью интерфейса
