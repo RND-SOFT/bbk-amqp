@@ -60,17 +60,49 @@ RSpec.describe Aggredator::AMQP::Consumer do
     subject.ack msg
   end
 
-  it '#nack' do
-    subject.run(stream)
-    channel = subject.instance_variable_get('@channel')
-    queue = connection.queues.values.first
-    queue.publish payload, props
+  context '#nack' do
 
-    msg = stream.pop
-    msg.delivery_info[:channel] = channel # set channel for mock
-    delivery_tag = msg.delivery_info[:delivery_tag]
-    expect(channel).to receive(:reject).with(delivery_tag, false)
-    subject.nack msg
+    let(:queue) {
+      connection.queues.values.first
+    }
+
+    before(:each) do
+      subject.run(stream)
+      @channel = subject.instance_variable_get('@channel')
+      queue.publish payload, props
+      @msg = stream.pop
+      @msg.delivery_info[:channel] = @channel # set channel for mock
+      @delivery_tag = @msg.delivery_info[:delivery_tag]
+    end
+
+    it 'default' do
+      expect(@channel).to receive(:reject).with(@delivery_tag, false)
+      subject.nack @msg
+    end
+
+    it 'with requeue_on_reject option' do
+      subject.options[:requeue_on_reject] = true
+      expect(@channel).to receive(:reject).with(@delivery_tag, true)
+      subject.nack @msg
+    end
+
+    it 'without requeue' do
+      expect(@channel).to receive(:reject).with(@delivery_tag, false)
+      subject.nack @msg, requeue: false
+    end
+
+    it 'with requeue' do
+      expect(@channel).to receive(:reject).with(@delivery_tag, true)
+      expect(subject.options[:requeue_on_reject]).to be_falsey
+      subject.nack @msg, requeue: true
+    end
+
+    it 'priority to requeue param' do
+      expect(@channel).to receive(:reject).with(@delivery_tag, false)
+      subject.options[:requeue_on_reject] = true
+      subject.nack @msg, requeue: false
+    end
+
   end
 
   it '#stop' do

@@ -83,9 +83,10 @@ module Aggredator
 
       # Nack incoming message
       # @param incoming [Aggredator::AMQP::Message] nack procesing message
-      def nack(incoming, error: nil, requeue: false, **kwargs)
+      def nack(incoming, error: nil, requeue: nil, **kwargs)
         logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}. Error: #{error.inspect}"
-        incoming.delivery_info[:channel].reject incoming.delivery_info[:delivery_tag], requeue || options[:requeue_on_reject]
+        requeue_message = requeue.nil? ? options[:requeue_on_reject] : requeue
+        incoming.delivery_info[:channel].reject incoming.delivery_info[:delivery_tag], requeue_message
       end
 
       # stop consuming messages
