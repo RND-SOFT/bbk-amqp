@@ -111,7 +111,7 @@ module Aggredator
         def client_name
           return connection.user unless connection.ssl?
 
-          Utils.commonname(connection.transport.tls_certificate_path)
+          @client_name ||= Utils.commonname(connection.transport.tls_certificate_path)
         end
 
         def on_return(exchange, basic_return, properties, body)
@@ -159,7 +159,7 @@ module Aggredator
             data = if payload.is_a?(String)
               payload
             else
-              payload.to_json
+              Oj.generate(payload)
             end
             channel.basic_publish(data, exchange, routing_key, options)
             future

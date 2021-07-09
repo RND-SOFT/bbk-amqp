@@ -19,7 +19,7 @@ module Aggredator
         )
         @headers = @properties.except(:headers).merge(properties[:headers]).with_indifferent_access
         @payload = begin
-                     JSON.parse(body).with_indifferent_access
+                     Oj.load(body).with_indifferent_access
                    rescue StandardError
                      {}.with_indifferent_access
                    end

@@ -19,7 +19,7 @@ module Aggredator
             delivery_info,
             metadata.to_hash.with_indifferent_access,
             begin
-              JSON.parse(payload).with_indifferent_access
+              Oj.load(payload).with_indifferent_access
             rescue StandardError
               payload
             end

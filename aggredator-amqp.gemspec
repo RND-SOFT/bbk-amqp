@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   # только для ANSWER_DOMAIN и возможно его стоит удалить и явно здесь прописать.
   spec.add_runtime_dependency 'aggredator-app', '~> 2.1.0'
   spec.add_runtime_dependency 'bunny'
+  spec.add_runtime_dependency 'oj'
 
   spec.add_development_dependency 'aggredator-api'
   spec.add_development_dependency 'bunny-mock'

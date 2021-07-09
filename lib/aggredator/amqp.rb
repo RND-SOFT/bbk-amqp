@@ -2,6 +2,7 @@
 
 require 'active_support'
 require 'active_support/core_ext'
+require 'oj'
 
 require 'aggredator/app'
 require 'aggredator/amqp/version'

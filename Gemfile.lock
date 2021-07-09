@@ -5,6 +5,7 @@ PATH
       activesupport
       aggredator-app (~> 2.1.0)
       bunny
+      oj
 
 GEM
   remote: https://rubygems.org/
@@ -74,6 +75,7 @@ GEM
     launchy (2.5.0)
       addressable (~> 2.7)
     minitest (5.14.2)
+    oj (3.12.1)
     parser (2.7.1.4)
       ast (~> 2.4.1)
     path_expander (1.1.0)
@@ -153,4 +155,4 @@ DEPENDENCIES
   simplecov-console
 
 BUNDLED WITH
-   2.1.4
+   2.2.22
