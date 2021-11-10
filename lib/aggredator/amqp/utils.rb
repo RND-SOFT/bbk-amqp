@@ -65,6 +65,7 @@ module Aggredator
       # @return [Bunny::Session] non started amqp connection
       def self.create_connection(options = {})
         hosts = [options[:hosts] || options[:host] || options[:hostname]].flatten.select(&:present?).uniq
+        hosts = hosts.map{|h| h.split(/[;\|]/)}.flatten.select(&:present?).uniq
 
         options[:hosts] = if hosts.empty?
           [ENV.fetch('MQ_HOST', 'mq')].split(/[;\|]/).flatten.select(&:present?).uniq
