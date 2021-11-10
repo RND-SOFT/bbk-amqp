@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    aggredator-amqp (0.1.0)
+    aggredator-amqp (0.1.1)
       activesupport
       aggredator-app (~> 2.1.0)
       bunny
@@ -28,11 +28,12 @@ GEM
       activesupport
       builder
       terminal-table
-    aggredator-app (2.1.0.37974)
+    aggredator-app (2.1.2.65641)
       activesupport
       aggredator-api (~> 2.0)
       aggredator-client (~> 2.0)
-    aggredator-client (2.0.1)
+      timeouter
+    aggredator-client (2.0.2.55590)
       activesupport
       aggredator-api (~> 2.0)
       bunny (~> 2.14.2)
@@ -75,7 +76,7 @@ GEM
     launchy (2.5.0)
       addressable (~> 2.7)
     minitest (5.14.2)
-    oj (3.12.1)
+    oj (3.13.9)
     parser (2.7.1.4)
       ast (~> 2.4.1)
     path_expander (1.1.0)
@@ -128,6 +129,7 @@ GEM
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
     thread_safe (0.3.6)
+    timeouter (0.1.3.38794)
     tty-which (0.4.2)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
@@ -155,4 +157,4 @@ DEPENDENCIES
   simplecov-console
 
 BUNDLED WITH
-   2.2.22
+   2.2.28

@@ -48,5 +48,10 @@ RSpec.describe Aggredator::AMQP::Utils do
     expect(Bunny).to receive(:new)
     described_class.create_connection
   end
+
+  it '#create_connection with hosts' do
+    expect(Bunny).to receive(:new)
+    described_class.create_connection(hosts: ['mq'])
+  end
 end
 
