@@ -46,6 +46,7 @@ module Aggredator
       end
 
       # Set default options and create non started connection to amqp
+      # @option options [String] :hosts List of Amqp hosts (default MQ_HOST env variable or mq)
       # @option options [String] :hostname Amqp host (default MQ_HOST env variable or mq)
       # @option options [Integer] :port Amqp port (default MQ_PORT env variable or 5671 - default tls port)
       # @option options [String] :vhost Connected amqp virtual host (default MQ_VHOST env variable or /)
@@ -63,7 +64,15 @@ module Aggredator
       # @option options [Boolean] :recover_from_connection_close (default false)
       # @return [Bunny::Session] non started amqp connection
       def self.create_connection(options = {})
-        options[:hostname] ||= ENV['MQ_HOST'] || 'mq'
+        hosts = [options[:hosts] || options[:host] || options[:hostname]].flatten.select(&:present?).uniq
+        hosts = hosts.map{|h| h.split(/[;\|]/)}.flatten.select(&:present?).uniq
+
+        options[:hosts] = if hosts.empty?
+          [ENV.fetch('MQ_HOST', 'mq')].split(/[;\|]/).flatten.select(&:present?).uniq
+        else
+          hosts
+        end
+        
         options[:port] ||= ENV['MQ_PORT'] || 5671
         options[:vhost] ||= ENV['MQ_VHOST'] || '/'
 
