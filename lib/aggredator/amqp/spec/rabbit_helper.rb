@@ -1,5 +1,6 @@
 require 'bunny'
 require 'fileutils'
+require 'aggredator/amqp/utils'
 
 module Aggredator
   module AMQP
