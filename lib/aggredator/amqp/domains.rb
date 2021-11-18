@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
+require 'aggredator/dispatcher'
+
 module Aggredator
   module AMQP
     # Store for amqp domains. Domain is pair: domain name and exchange name.
     class Domains
 
+      ANSWER_DOMAIN = if defined?(Aggredator::Dispatcher::ANSWER_DOMAIN)
+        Aggredator::Dispatcher::ANSWER_DOMAIN.to_sym
+      else
+        :answer
+      end
+
       attr_reader :domains
 
       # Build default domains - common for v1 amqp aggredator services
       def self.default
-        new(outer: '', direct: '', inner: 'main_exchange', gw: 'gw', Aggredator::Dispatcher::ANSWER_DOMAIN.to_sym => '')
+        new(outer: '', direct: '', inner: 'main_exchange', gw: 'gw', ANSWER_DOMAIN => '')
       end
 
       def initialize(domains = {})
