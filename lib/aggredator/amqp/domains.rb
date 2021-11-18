@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'aggredator/app'
+
+require 'aggredator/dispatcher'
 
 module Aggredator
   module AMQP
