@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'activesupport'
   # только для ANSWER_DOMAIN и возможно его стоит удалить и явно здесь прописать.
-  spec.add_runtime_dependency 'aggredator-app', '~> 2.1.0'
+  spec.add_runtime_dependency 'aggredator-app', '~> 2.0'
   spec.add_runtime_dependency 'bunny'
   spec.add_runtime_dependency 'oj'
 

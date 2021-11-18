@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    aggredator-amqp (0.1.1)
+    aggredator-amqp (0.1.2)
       activesupport
-      aggredator-app (~> 2.1.0)
+      aggredator-app (~> 2.0)
       bunny
       oj
 
