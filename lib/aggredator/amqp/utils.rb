@@ -65,28 +65,38 @@ module Aggredator
       # @return [Bunny::Session] non started amqp connection
       def self.create_connection(options = {})
         hosts = [options[:hosts] || options[:host] || options[:hostname]].flatten.select(&:present?).uniq
-        hosts = hosts.map{|h| h.split(/[;\|]/)}.flatten.select(&:present?).uniq
+        hosts = hosts.map{|h| h.split(/[;|]/) }.flatten.select(&:present?).uniq
 
         options[:hosts] = if hosts.empty?
-          [ENV.fetch('MQ_HOST', 'mq')].split(/[;\|]/).flatten.select(&:present?).uniq
+          [ENV.fetch('MQ_HOST', 'mq')].split(/[;|]/).flatten.select(&:present?).uniq
         else
           hosts
         end
-        
+
         options[:port] ||= ENV['MQ_PORT'] || 5671
         options[:vhost] ||= ENV['MQ_VHOST'] || '/'
+        user = options[:username] || options[:user] || ENV['MQ_USER']
+        options[:username] = options[:user] = user
+
+        pwd = options[:password] || options[:pass] || options[:pwd] || ENV['MQ_PASS']
+        options[:password] = options[:pass] = options[:pwd] = pwd
 
         options[:tls] = options.fetch(:tls, true)
         options[:tls_cert] ||= 'config/keys/cert.pem'
         options[:tls_key] ||= 'config/keys/key.pem'
         options[:tls_ca_certificates] ||= ['config/keys/cacert.pem']
 
-        options[:verify] = options.fetch(:verify, options.fetch(:verify_peer, options.fetch(:verify_ssl, nil)))
+        options[:verify] =
+          options.fetch(:verify, options.fetch(:verify_peer, options.fetch(:verify_ssl, nil)))
         options[:verify] = true if options[:verify]
         options[:verify_peer] = options[:verify]
         options[:verify_ssl] = options[:verify]
 
-        options[:auth_mechanism] ||= 'EXTERNAL'
+        options[:auth_mechanism] ||= if options[:tls]
+          'EXTERNAL'
+        else
+          'PLAIN'
+        end
 
         options[:automatically_recover] ||= false
         options[:automatic_recovery]    ||= false
