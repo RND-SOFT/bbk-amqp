@@ -78,7 +78,8 @@ module Aggredator
         user = options[:username] || options[:user] || ENV['MQ_USER']
         options[:username] = options[:user] = user
 
-        pwd = options[:password] || options[:pass] || options[:pwd] || ENV['MQ_PASS']
+        # Передаем пустую строку чтобы bunny не использовал пароль по умолчанию guest
+        pwd = options[:password] || options[:pass] || options[:pwd] || ENV['MQ_PASS'] || ''
         options[:password] = options[:pass] = options[:pwd] = pwd
 
         options[:tls] = options.fetch(:tls, true)
