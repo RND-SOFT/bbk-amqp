@@ -57,6 +57,11 @@ ruby-2.5:
   variables:
     CASE: '2.5'
 
+ruby-3.0:
+  extends: .test
+  variables:
+    CASE: '3.0'
+
 ruby-agg:
   extends: .test
   variables:
