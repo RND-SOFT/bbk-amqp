@@ -17,9 +17,10 @@ SimpleCov.start do
   end
 end
 
-require 'aggredator/amqp'
+require 'bbk/amqp'
+require 'bbk/app'
 
-Aggredator::AMQP.logger = ::Logger.new(IO::NULL)
+BBK::AMQP.logger = ::Logger.new(IO::NULL)
 
 Dir[File.join(__dir__, 'support', '**', '*.rb')].sort.each {|f| require f }
 

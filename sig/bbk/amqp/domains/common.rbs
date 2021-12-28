@@ -1,0 +1,10 @@
+module BBK
+  module AMQP
+    module Domains
+      interface _Domain
+        def name: () -> String
+        def call: (BBK::App::Dispatcher::Route) -> RouteInfo
+      end
+    end
+  end
+end

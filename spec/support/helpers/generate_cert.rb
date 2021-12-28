@@ -10,7 +10,7 @@ module GenerateCert
     cert.not_before = Time.now
     cert.not_after = Time.now + 1.hour
     cert.public_key = key.public_key
-    cert.sign key, OpenSSL::Digest::SHA1.new
+    cert.sign key, OpenSSL::Digest.new('SHA1')
     cert
   end
 

@@ -1,0 +1,12 @@
+module BBK
+  module AMQP
+    module Domains
+      class ByBlock
+        include _Domain
+
+        def initialize: (String name) {(BBK::App::Dispatcher::Route) -> RouteInfo} -> void
+
+      end
+    end
+  end
+end

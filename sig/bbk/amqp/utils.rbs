@@ -1,0 +1,11 @@
+module BBK
+  module AMQP
+    module Utils
+    
+      def self.pop: (untyped queue, ?Integer timeout) -> void
+      def self.commonname: (String cert_path) -> String
+      def self.create_connection: (?Hash[Symbol, untyped] options) -> untyped
+
+    end
+  end
+end
