@@ -13,6 +13,8 @@ require 'bbk/amqp/route_info'
 require 'bbk/amqp/domains_set'
 require 'bbk/amqp/domains/exchange'
 require 'bbk/amqp/domains/by_block'
+require 'bbk/amqp/rejection_policies/reject'
+require 'bbk/amqp/rejection_policies/requeue'
 require_relative 'bunny_patch'
 
 

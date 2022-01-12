@@ -1,17 +1,18 @@
 # frozen_string_literal: true
+require 'bbk/amqp/rejection_policies/requeue'
 
 module BBK
   module AMQP
     class Consumer
 
-      attr_reader :connection, :queue_name, :queue, :options, :logger
+      attr_reader :connection, :queue_name, :queue, :rejection_policy, :options, :logger
 
       DEFAULT_OPTIONS = {
         consumer_pool_size:               3,
         consumer_pool_abort_on_exception: true,
         prefetch_size:                    10,
-        requeue_on_reject:                false,
-        consumer_tag:                     nil
+        consumer_tag:                     nil,
+        rejection_policy:                 RejectionPolicies::Requeue.new
       }.freeze
 
       PROTOCOLS = %w[mq amqp amqps].freeze
@@ -28,6 +29,7 @@ module BBK
         @queue_name = @queue&.name || queue_name
 
         @options = DEFAULT_OPTIONS.merge(options)
+        @rejection_policy = @options.delete(:rejection_policy)
 
         logger = @options.fetch(:logger, BBK::AMQP.logger)
         logger = logger.respond_to?(:tagged) ? logger : ActiveSupport::TaggedLogging.new(logger)
@@ -47,7 +49,7 @@ module BBK
           ch.prefetch(options[:prefetch_size])
         end
 
-        @logger.add_tags "Ch##{@channel.id}"
+        logger.add_tags "Ch##{@channel.id}"
 
         @queue ||= @channel.queue(queue_name, passive: true)
 
@@ -82,11 +84,8 @@ module BBK
 
       # Nack incoming message
       # @param incoming [BBK::AMQP::Message] nack procesing message
-      def nack(incoming, *args, error: nil, requeue: nil, **_kwargs)
-        logger.debug "Reject message #{incoming.headers[:type]}[#{incoming.headers[:message_id]}] delivery tag: #{incoming.delivery_info[:delivery_tag].to_i}. Error: #{error.inspect}"
-        requeue_message = requeue.nil? ? options[:requeue_on_reject] : requeue
-        incoming.delivery_info[:channel].reject incoming.delivery_info[:delivery_tag],
-                                                requeue_message
+      def nack(incoming, *args, error: nil, **_kwargs)
+        rejection_policy.call(incoming, error)
       end
 
       # stop consuming messages

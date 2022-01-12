@@ -38,7 +38,7 @@ module BBK
       end
 
       def nack(*args, error: nil, **kwargs)
-        consumer.ack(self, *args, error: error, **kwargs)
+        consumer.nack(self, *args, error: error, **kwargs)
       end
 
     end
