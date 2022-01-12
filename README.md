@@ -21,7 +21,7 @@ Or adding to your project:
 ```ruby
 # Gemfile
 
-gem "bbk-utamqpils", "~> 1.0.0"
+gem "bbk-amqp", "~> 1.0.0"
 ```
 
 ### Supported Ruby versions

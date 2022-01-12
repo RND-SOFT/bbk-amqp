@@ -6,7 +6,6 @@ services:
       context: .
       args:
         RUBY_VERSION: 2.5
-        BUNDLE_NEXUS__RNDS__LOCAL:
     image: bbk-amqp-tests:2.5
     working_dir: /home/app
     
@@ -15,7 +14,6 @@ services:
       context: .
       args:
         RUBY_VERSION: 3.0
-        BUNDLE_NEXUS__RNDS__LOCAL: 
     image: bbk-amqp-tests:3.0
     working_dir: /home/app
     
