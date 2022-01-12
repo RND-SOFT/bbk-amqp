@@ -1,0 +1,14 @@
+module BBK
+  module AMQP
+    module Domains
+      class Exchange
+        include _Domain
+
+        attr_reader exchange: String
+
+        def initialize: (String, String) -> void
+
+      end
+    end
+  end
+end
