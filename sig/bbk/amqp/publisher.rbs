@@ -1,0 +1,31 @@
+module BBK
+  module AMQP
+    class Publisher
+
+      include BBK::App::Dispatcher::_Publisher
+      # def publish: (BBK::App::Dispatcher::Result) -> untyped
+
+      HEADER_PROP_FIELDS: Array[Symbol]
+
+      attr_reader connection: untyped
+      
+
+      def initialize: (untyped connection, untyped domains, ?logger: _Logger) -> void
+      def protocols: ()-> Array[String]
+
+
+      def publish_message: (String routing_key, BBK::App::Dispatcher::_Message message, exchange: String, ?options: Hash[String|Symbol, untyped]) -> untyped
+  
+      def raw_publish: (String? routing_key, exchange: String, ?properties: Hash[String|Symbol, untyped], ?headers: Hash[String|Symbol, untyped], ?payload: Hash[String|Symbol, untyped]|String?) -> untyped
+
+      private
+
+      def initialize_callbacks: () -> void
+      def configure_exchange: (String? exchange_name) -> void
+      def client_name: () -> String
+      def on_return: (untyped exchange, untyped basic_return, Hash[String|Symbol, untyped] properties, String? body) -> void
+      def on_confirm: (untyped channel, Integer ack_id, untyped flag, bool neg) -> untyped
+      def send_message: (String exchange, String? routing_key, Hash[untyped, untyped]?|String? payload, Hash[String|Symbol, untyped] options) -> void
+    end
+  end
+end

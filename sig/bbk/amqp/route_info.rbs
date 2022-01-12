@@ -1,0 +1,10 @@
+module BBK
+  module AMQP
+    class RouteInfo
+      attr_reader exchange: String?
+      attr_reader routing_key: String?
+
+      def initialize: (String? exchange, String? routing_key) -> void
+    end
+  end
+end

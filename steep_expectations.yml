@@ -1,0 +1,69 @@
+---
+- file: lib/bbk/amqp/consumer.rb
+  diagnostics:
+  - range:
+      start:
+        line: 75
+        character: 13
+      end:
+        line: 75
+        character: 53
+    severity: ERROR
+    message: 'Method parameters are incompatible with declaration `(::BBK::App::Dispatcher::_IncomingMessage,
+      *untyped, ?answer: ::BBK::App::Dispatcher::_Message, **untyped) -> void`'
+    code: Ruby::MethodArityMismatch
+  - range:
+      start:
+        line: 85
+        character: 14
+      end:
+        line: 85
+        character: 68
+    severity: ERROR
+    message: 'Method parameters are incompatible with declaration `(::BBK::App::Dispatcher::_IncomingMessage,
+      *untyped, ?error: untyped, ?requeue: untyped, **untyped) -> void`'
+    code: Ruby::MethodArityMismatch
+- file: lib/bbk/amqp/message.rb
+  diagnostics:
+  - range:
+      start:
+        line: 36
+        character: 13
+      end:
+        line: 36
+        character: 43
+    severity: ERROR
+    message: 'Method parameters are incompatible with declaration `(*untyped, ?answer:
+      (::BBK::App::Dispatcher::Result | nil), **untyped) -> void`'
+    code: Ruby::MethodArityMismatch
+  - range:
+      start:
+        line: 37
+        character: 27
+      end:
+        line: 37
+        character: 32
+    severity: ERROR
+    message: Unsupported splat node occurrence
+    code: Ruby::UnsupportedSyntax
+  - range:
+      start:
+        line: 40
+        character: 14
+      end:
+        line: 40
+        character: 43
+    severity: ERROR
+    message: 'Method parameters are incompatible with declaration `(*untyped, ?error:
+      untyped, **untyped) -> void`'
+    code: Ruby::MethodArityMismatch
+  - range:
+      start:
+        line: 41
+        character: 27
+      end:
+        line: 41
+        character: 32
+    severity: ERROR
+    message: Unsupported splat node occurrence
+    code: Ruby::UnsupportedSyntax

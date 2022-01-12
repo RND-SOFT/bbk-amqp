@@ -1,0 +1,11 @@
+module BBK
+  module AMQP
+    class Message
+      include BBK::App::Dispatcher::_IncomingMessage
+      # def ack: (*untyped, ?answer: BBK::App::Dispatcher::Result, **untyped) -> void
+      # def nack: (*untyped, ?error: untyped, **untyped) -> void
+
+      def initialize: (BBK::App::Dispatcher::_Consumer, untyped delivery_info, Hash[String|Symbol, untyped] properties, String? body) -> void
+    end
+  end
+end

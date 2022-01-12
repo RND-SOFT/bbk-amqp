@@ -1,0 +1,26 @@
+module BBK
+  module AMQP
+    class Consumer
+      attr_reader connection: untyped
+      attr_reader queue_name: String
+      attr_reader queue: untyped
+      attr_reader options: Hash[String|Symbol, untyped]
+      attr_reader logger: Logger|BBK::Utils::_ProxyObject
+
+      def initialize: (untyped, ?queue_name: String?, **untyped) -> void
+
+      def protocols: () -> Array[String]
+      
+      def run: (BBK::App::Dispatcher::MessageStream) -> void
+
+      def ack: (BBK::App::Dispatcher::_IncomingMessage, *untyped, ?answer: BBK::App::Dispatcher::_Message, **untyped) -> void
+
+      def nack: (BBK::App::Dispatcher::_IncomingMessage, *untyped, ?error: untyped, ?requeue: untyped, **untyped) -> void
+
+      def stop: () -> void
+
+      def close: () -> void
+
+    end
+  end
+end

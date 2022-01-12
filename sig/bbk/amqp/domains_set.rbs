@@ -1,0 +1,13 @@
+module BBK
+  module AMQP
+    class DomainsSet
+      def initialize: (*BBK::AMQP::Domains::_Domain) -> void
+
+      def []: (String) -> BBK::AMQP::Domains::_Domain?
+      def add: (BBK::AMQP::Domains::_Domain) -> void
+      def each: () ?{(BBK::AMQP::Domains::_Domain) -> void} -> void
+                  | -> Enumerator[BBK::AMQP::Domains::_Domain, void]
+      def has?: (String) -> bool
+    end
+  end
+end
