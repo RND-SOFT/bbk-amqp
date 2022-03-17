@@ -44,7 +44,7 @@ handler.register Processor, logger
 
 dispatcher = BBK::App::Dispatcher.new handler, logger: logger
 
-consumer = BBK::AMQP::Consumer.new connection, queue_name: QUEUE_NAME, consumer_tag: 'agg_amqp_test'
+consumer = BBK::AMQP::Consumer.new connection, queue_name: QUEUE_NAME, consumer_tag: 'agg_amqp_test', rejection_policy: BBK::AMQP::RejectionPolicies::Requeue.new
 publisher = BBK::AMQP::Publisher.new connection,
                                      BBK::AMQP::DomainsSet.new(BBK::AMQP::Domains::Exchange.new(
                                                                  ROUTE_DOMAIN, ''
