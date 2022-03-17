@@ -60,10 +60,42 @@
   - range:
       start:
         line: 45
-        character: 27
+        character: 28
       end:
         line: 45
-        character: 32
+        character: 33
     severity: ERROR
     message: Unsupported splat node occurrence
     code: Ruby::UnsupportedSyntax
+- file: lib/bbk/amqp/publisher.rb
+  diagnostics:
+  - range:
+      start:
+        line: 76
+        character: 68
+      end:
+        line: 76
+        character: 69
+    severity: ERROR
+    message: |-
+      Cannot pass a value of type `(::String | ::Symbol)` as an argument of type `::Symbol`
+        (::String | ::Symbol) <: ::Symbol
+          ::String <: ::Symbol
+            ::Object <: ::Symbol
+              ::BasicObject <: ::Symbol
+    code: Ruby::ArgumentTypeMismatch
+  - range:
+      start:
+        line: 91
+        character: 68
+      end:
+        line: 91
+        character: 69
+    severity: ERROR
+    message: |-
+      Cannot pass a value of type `(::String | ::Symbol)` as an argument of type `::Symbol`
+        (::String | ::Symbol) <: ::Symbol
+          ::String <: ::Symbol
+            ::Object <: ::Symbol
+              ::BasicObject <: ::Symbol
+    code: Ruby::ArgumentTypeMismatch
