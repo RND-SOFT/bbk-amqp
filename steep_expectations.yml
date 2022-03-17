@@ -3,10 +3,10 @@
   diagnostics:
   - range:
       start:
-        line: 75
+        line: 77
         character: 13
       end:
-        line: 75
+        line: 77
         character: 53
     severity: ERROR
     message: 'Method parameters are incompatible with declaration `(::BBK::App::Dispatcher::_IncomingMessage,
@@ -14,11 +14,11 @@
     code: Ruby::MethodArityMismatch
   - range:
       start:
-        line: 85
+        line: 87
         character: 14
       end:
-        line: 85
-        character: 68
+        line: 87
+        character: 54
     severity: ERROR
     message: 'Method parameters are incompatible with declaration `(::BBK::App::Dispatcher::_IncomingMessage,
       *untyped, ?error: untyped, ?requeue: untyped, **untyped) -> void`'
