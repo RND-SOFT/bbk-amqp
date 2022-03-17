@@ -21,7 +21,7 @@ Or adding to your project:
 ```ruby
 # Gemfile
 
-gem "bbk-utamqpils", "~> 1.0.0"
+gem "bbk-amqp", "~> 1.0.0"
 ```
 
 ### Supported Ruby versions
@@ -33,6 +33,10 @@ gem "bbk-utamqpils", "~> 1.0.0"
 * Ruby (MRI) 2.5.x
 * Ruby (MRI) 3.0.x
 
+## Contributing
+
+See the file [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 ## License
 
-The gem is available as open source under the terms of the MIT License.
+See the file [LICENSE](./LICENSE)

@@ -33,6 +33,10 @@ module BBK
         headers[:reply_to]
       end
 
+      def user_id
+        headers[:user_id]
+      end
+
       def ack(*args, answer: nil, **kwargs)
         consumer.ack(self, *args, answer: answer, **kwargs)
       end

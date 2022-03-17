@@ -3,13 +3,12 @@ PATH
   specs:
     bbk-amqp (1.0.0)
       activesupport (~> 6.0)
-      bbk-utils (= 1.0.1.40000)
+      bbk-utils (> 1.0.1)
       bunny (>= 2.19.0)
       oj
 
 GEM
   remote: https://rubygems.org/
-  remote: http://nexus.rnds.local/repository/internal/
   specs:
     activesupport (6.1.4.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -26,11 +25,11 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    bbk-app (1.0.0.40000)
+    bbk-app (1.0.0.72899)
       activesupport
-      bbk-utils (= 1.0.1.40000)
+      bbk-utils (> 1.0.1)
       timeouter
-    bbk-utils (1.0.1.40000)
+    bbk-utils (1.0.1.72735)
       activesupport (~> 6.0)
       russian
     bunny (2.19.0)
@@ -64,13 +63,13 @@ GEM
     launchy (2.5.0)
       addressable (~> 2.7)
     minitest (5.15.0)
-    oj (3.13.10)
+    oj (3.13.11)
     parser (3.0.3.2)
       ast (~> 2.4.1)
     path_expander (1.1.0)
     public_suffix (4.0.6)
-    rainbow (3.0.0)
-    rake (12.3.3)
+    rainbow (3.1.1)
+    rake (13.0.6)
     rbtree (0.4.4)
     reek (6.0.6)
       kwalify (~> 0.7.0)
@@ -89,7 +88,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.3)
-    rspec_junit_formatter (0.4.1)
+    rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
     ruby_parser (3.18.1)
       sexp_processor (~> 4.16)
@@ -134,14 +133,14 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
-    zeitwerk (2.5.2)
+    zeitwerk (2.5.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bbk-amqp!
-  bbk-app (= 1.0.0.40000)
+  bbk-app (>= 1.0.0)
   bunny-mock
   byebug
   rake

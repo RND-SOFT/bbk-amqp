@@ -27,10 +27,10 @@
   diagnostics:
   - range:
       start:
-        line: 36
+        line: 40
         character: 13
       end:
-        line: 36
+        line: 40
         character: 43
     severity: ERROR
     message: 'Method parameters are incompatible with declaration `(*untyped, ?answer:
@@ -38,20 +38,20 @@
     code: Ruby::MethodArityMismatch
   - range:
       start:
-        line: 37
+        line: 41
         character: 27
       end:
-        line: 37
+        line: 41
         character: 32
     severity: ERROR
     message: Unsupported splat node occurrence
     code: Ruby::UnsupportedSyntax
   - range:
       start:
-        line: 40
+        line: 44
         character: 14
       end:
-        line: 40
+        line: 44
         character: 43
     severity: ERROR
     message: 'Method parameters are incompatible with declaration `(*untyped, ?error:
@@ -59,11 +59,43 @@
     code: Ruby::MethodArityMismatch
   - range:
       start:
-        line: 41
+        line: 45
         character: 28
       end:
-        line: 41
+        line: 45
         character: 33
     severity: ERROR
     message: Unsupported splat node occurrence
     code: Ruby::UnsupportedSyntax
+- file: lib/bbk/amqp/publisher.rb
+  diagnostics:
+  - range:
+      start:
+        line: 76
+        character: 68
+      end:
+        line: 76
+        character: 69
+    severity: ERROR
+    message: |-
+      Cannot pass a value of type `(::String | ::Symbol)` as an argument of type `::Symbol`
+        (::String | ::Symbol) <: ::Symbol
+          ::String <: ::Symbol
+            ::Object <: ::Symbol
+              ::BasicObject <: ::Symbol
+    code: Ruby::ArgumentTypeMismatch
+  - range:
+      start:
+        line: 91
+        character: 68
+      end:
+        line: 91
+        character: 69
+    severity: ERROR
+    message: |-
+      Cannot pass a value of type `(::String | ::Symbol)` as an argument of type `::Symbol`
+        (::String | ::Symbol) <: ::Symbol
+          ::String <: ::Symbol
+            ::Object <: ::Symbol
+              ::BasicObject <: ::Symbol
+    code: Ruby::ArgumentTypeMismatch

@@ -2,8 +2,6 @@ ARG RUBY_VERSION=2.5
 
 FROM ruby:${RUBY_VERSION}-alpine
 
-ARG BUNDLE_NEXUS__RNDS__LOCAL
-ENV BUNDLE_NEXUS__RNDS__LOCAL=${BUNDLE_NEXUS__RNDS__LOCAL}
 
 RUN mkdir -p /usr/local/etc \
   && { \
