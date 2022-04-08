@@ -56,7 +56,8 @@ module BBK
         subscribe_opts = {
           block:        false,
           manual_ack:   true,
-          consumer_tag: options[:consumer_tag]
+          consumer_tag: options[:consumer_tag],
+          exclusive: options.fetch(:exclusive, false)
         }.compact
 
         logger.info 'Starting...'
