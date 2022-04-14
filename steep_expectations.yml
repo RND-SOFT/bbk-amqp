@@ -86,10 +86,10 @@
     code: Ruby::ArgumentTypeMismatch
   - range:
       start:
-        line: 91
+        line: 92
         character: 68
       end:
-        line: 91
+        line: 92
         character: 69
     severity: ERROR
     message: |-
