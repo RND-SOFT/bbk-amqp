@@ -8,7 +8,7 @@ module BBK
     # Publisher send amqp messages
     class Publisher
 
-      HEADER_PROP_FIELDS = %i[user_id message_id reply_to correlation_id].freeze
+      HEADER_PROP_FIELDS = %i[message_id reply_to correlation_id].freeze
       PROTOCOLS = %w[mq amqp amqps].freeze
 
       attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
@@ -72,7 +72,7 @@ module BBK
           mandatory:   true,
           routing_key: routing_key,
           headers:     message.headers,
-          user_id:     client_name, # если есть в headers, то на следующей строке будет перетерто
+          # user_id:     client_name,
           **message.headers.select {|k| HEADER_PROP_FIELDS.include? k }.compact
         }.merge(options).symbolize_keys
         send_message(exchange, routing_key, message.payload, properties)
