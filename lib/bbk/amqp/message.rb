@@ -45,6 +45,10 @@ module BBK
         consumer.nack(self, *args, error: error, **kwargs)
       end
 
+      def clone
+        self.class.new(consumer, delivery_info, properties, body)
+      end
+
     end
   end
 end

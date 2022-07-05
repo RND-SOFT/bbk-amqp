@@ -6,6 +6,7 @@ module BBK
       # def nack: (*untyped, ?error: untyped, **untyped) -> void
 
       def initialize: (BBK::App::Dispatcher::_Consumer, untyped delivery_info, Hash[String|Symbol, untyped] properties, String? body) -> void
+      def clone: -> Message
     end
   end
 end

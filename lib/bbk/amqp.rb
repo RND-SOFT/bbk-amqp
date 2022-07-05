@@ -15,6 +15,7 @@ require 'bbk/amqp/domains/exchange'
 require 'bbk/amqp/domains/by_block'
 require 'bbk/amqp/rejection_policies/reject'
 require 'bbk/amqp/rejection_policies/requeue'
+require 'bbk/amqp/rejection_policies/republish'
 require_relative 'bunny_patch'
 
 
