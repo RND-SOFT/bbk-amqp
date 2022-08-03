@@ -50,21 +50,6 @@
   diagnostics:
   - range:
       start:
-        line: 76
-        character: 68
-      end:
-        line: 76
-        character: 69
-    severity: ERROR
-    message: |-
-      Cannot pass a value of type `(::String | ::Symbol)` as an argument of type `::Symbol`
-        (::String | ::Symbol) <: ::Symbol
-          ::String <: ::Symbol
-            ::Object <: ::Symbol
-              ::BasicObject <: ::Symbol
-    code: Ruby::ArgumentTypeMismatch
-  - range:
-      start:
         line: 92
         character: 68
       end:

@@ -73,7 +73,7 @@ module BBK
           routing_key: routing_key,
           headers:     message.headers,
           # user_id:     client_name,
-          **message.headers.select {|k| HEADER_PROP_FIELDS.include? k }.compact
+          **message.headers.select {|k| HEADER_PROP_FIELDS.include?(k.to_sym) }.compact
         }.merge(options).symbolize_keys
         properties[:user_id] = client_name if message.headers[:user_id].blank?
         send_message(exchange, routing_key, message.payload, properties)
