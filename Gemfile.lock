@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     bbk-amqp (1.0.0)
-      activesupport (~> 6.0)
+      activesupport (>= 6.0)
       bbk-utils (> 1.0.1)
       bunny (>= 2.19.0)
       oj

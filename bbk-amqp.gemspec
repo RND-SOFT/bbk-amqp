@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'bin'
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'activesupport', '~> 6.0'
+  spec.add_runtime_dependency 'activesupport', '>= 6.0'
   spec.add_runtime_dependency 'bbk-utils', '> 1.0.1'
   spec.add_runtime_dependency 'bunny', '>= 2.19.0'
   spec.add_runtime_dependency 'oj'
