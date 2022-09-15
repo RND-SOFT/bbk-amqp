@@ -63,7 +63,7 @@ module BBK
       # Publish message
       # @param routing_key [String] message routing key
       # @param message [Object] (object with headers and payload method)
-      # @param exchange [Object] exchange for sending message
+      # @param exchange [String] exchange for sending message
       # @param options [Hash] message properties
       def publish_message(routing_key, message, exchange:, options: {})
         logger.debug "Try publish message #{message.headers.inspect}"
