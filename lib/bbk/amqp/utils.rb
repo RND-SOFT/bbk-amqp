@@ -14,26 +14,42 @@ module BBK
       # @return [Array] array with delivery_info, metadata and payload
       def self.pop(queue, timeout = 10)
         unblocker = Queue.new
-        consumer = queue.subscribe(block: false) do |delivery_info, metadata, payload|
-          message = [
-            delivery_info,
-            metadata.to_hash.with_indifferent_access,
-            begin
-              Oj.load(payload).with_indifferent_access
-            rescue StandardError
-              payload
+        consumed = false
+        mx = Mutex.new
+        # Если сообщений несколько то порядок может поменяться и это нужно иметь в виду.
+        # Решить можно создав, отдельный канал с qos 1.
+        consumer = queue.subscribe(block: false, manual_ack: true) do |delivery_info, metadata, payload|
+          mx.synchronize do
+            if consumed
+              queue.channel.nack(delivery_info.delivery_tag, false, true)
+              sleep 0.1
+              break
             end
-          ]
-          unblocker << message
+            consumed = true
+            message = [
+              delivery_info,
+              metadata.to_hash.with_indifferent_access,
+              begin
+                Oj.load(payload).with_indifferent_access
+              rescue StandardError
+                payload
+              end
+            ]
+            unblocker << message
+          end
         end
         Thread.new do
           sleep timeout
           unblocker << :timeout
         end
         result = unblocker.pop
+        if result == :timeout
+          consumer.cancel
+          raise ::Timeout::Error
+        end
+        queue.channel.ack(result[0].delivery_tag)
+        sleep 0.1
         consumer.cancel
-        raise ::Timeout::Error if result == :timeout
-
         result
       end
 
