@@ -44,11 +44,12 @@ module BBK
         end
         result = unblocker.pop
         if result == :timeout
+          consumed = true
           consumer.cancel
           raise ::Timeout::Error
         end
         queue.channel.ack(result[0].delivery_tag)
-        sleep 0.1
+        sleep 0.2
         consumer.cancel
         result
       end
