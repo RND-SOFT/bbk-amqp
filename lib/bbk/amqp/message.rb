@@ -17,7 +17,7 @@ module BBK
           protocols:        consumer.protocols,
           queue:            amqp_consumer&.queue_name
         )
-        @headers = @properties.except(:headers).merge(properties[:headers]).with_indifferent_access
+        @headers = @properties.except(:headers).merge(properties[:headers].presence || {}).with_indifferent_access
         @payload = begin
           Oj.load(body).with_indifferent_access
         rescue StandardError
