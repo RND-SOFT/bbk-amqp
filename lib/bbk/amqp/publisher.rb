@@ -120,8 +120,7 @@ module BBK
         end
 
         def on_return(exchange, basic_return, properties, body)
-          args = { exchange: exchange, basic_return: basic_return, properties: properties,
-body: body }
+          args = { exchange: exchange, basic_return: basic_return, properties: properties, body: body }
           message_id = properties[:message_id]
           logger.info "Message with message_id #{message_id} returned #{basic_return.inspect}"
           ack_id, = ack_map.each_pair.find {|_, msg_id| msg_id == message_id }
