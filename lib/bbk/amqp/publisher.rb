@@ -11,6 +11,18 @@ module BBK
       HEADER_PROP_FIELDS = %i[message_id reply_to correlation_id].freeze
       PROTOCOLS = %w[mq amqp amqps].freeze
 
+      class PublishedMessage
+
+        attr_reader :headers, :payload
+
+        def initialize(headers, payload)
+          @headers = headers
+          @payload = payload
+        end
+
+      end
+
+
       attr_reader :connection, :domains, :logger, :channel, :ack_map, :sended_messages, :channel
 
       def initialize(connection, domains, logger: BBK::AMQP.logger)
@@ -56,8 +68,9 @@ module BBK
         raise ArgumentError.new("Unknown route domain #{resutl_domain}") if domain.nil?
 
         route_info = domain.call(route)
+        logger.debug "Route #{route.inspect} transformed to #{route_info.inspect}"
         message = result.message
-        publish_message(route_info.routing_key, message, exchange: route_info.exchange)
+        publish_message(route_info.routing_key, PublishedMessage.new({**message.headers, **route_info.headers}, message.payload), exchange: route_info.exchange)
       end
 
       # Publish message

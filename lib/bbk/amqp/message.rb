@@ -49,6 +49,10 @@ module BBK
         self.class.new(consumer, delivery_info, properties, body)
       end
 
+      def protocol
+        consumer&.protocols&.first
+      end
+
     end
   end
 end
