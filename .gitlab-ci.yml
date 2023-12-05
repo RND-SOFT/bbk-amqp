@@ -64,7 +64,7 @@ build:
       - coverage/*
       - rubycritic/*
 
-pushgem:
+.pushgem:
   image: rnds/ruby:3.0-test
   stage: deploy
   script:
@@ -73,8 +73,14 @@ pushgem:
     - chmod 600 ~/.gem/credentials
     - export GEMFILE=`ls *.gem | tail -n 1`
     - gem push $GEMFILE
+
+pushgem:
+  extends: .pushgem
   only:
     - master
     - /^v\d$/
     - /^v\d\.\d$/
 
+manual_push_gem:
+  extends: .pushgem
+  when: manual
