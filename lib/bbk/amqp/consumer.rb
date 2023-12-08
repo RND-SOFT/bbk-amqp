@@ -43,6 +43,11 @@ module BBK
         PROTOCOLS
       end
 
+      # Signal that need answer on every incoming message
+      def sync?
+        false
+      end
+
       # Running non blocking consumer
       # @param msg_stream [Enumerable] - object with << method
       def run(msg_stream)
