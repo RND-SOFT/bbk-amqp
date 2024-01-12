@@ -52,17 +52,32 @@ RSpec.describe BBK::AMQP::Consumer do
     expect(msg.body).to eq payload
   end
 
-  it '#ack' do
-    subject.run(stream)
-    channel = subject.instance_variable_get('@channel')
-    queue = connection.queues.values.first
-    queue.publish payload, props
+  context '#ack' do
+  
+    let(:channel) { double }
+    let(:delivery_tag) { SecureRandom.uuid }
 
-    msg = stream_queue.pop
-    msg.delivery_info[:channel] = channel # set channel for mock
-    delivery_tag = msg.delivery_info[:delivery_tag]
-    expect(channel).to receive(:ack).with(delivery_tag)
-    subject.ack msg
+    let(:in_message) do
+      BBK::AMQP::Message.new(OpenStruct.new(protocols: "test"), {channel: channel, delivery_tag: delivery_tag}, {}, {})
+    end
+
+    it 'without answer' do
+      expect(channel).to receive(:ack).with(delivery_tag)
+      subject.ack in_message
+    end
+
+    it 'answer with non configured publisher' do
+      expect do
+        subject.ack in_message, :message_mock
+      end.to raise_error
+    end
+
+    it 'send answer' do
+      expect(channel).to receive(:ack).with(delivery_tag)
+      subject.publisher = double(BBK::AMQP::Publisher)
+      subject.ack in_message, OpenStruct.new(route: :test)
+    end
+
   end
 
   it '#stop' do

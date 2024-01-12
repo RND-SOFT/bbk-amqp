@@ -5,7 +5,7 @@ require 'tempfile'
 
 RSpec.describe BBK::AMQP::Publisher do
   let(:connection) { BunnyMock.new }
-  let(:domains) { BBK::AMQP::DomainsSet.new BBK::AMQP::Domains::Exchange.new('direct', 'direct') }
+  let(:domains) { BBK::App::DomainsSet.new BBK::AMQP::Domains::Exchange.new('direct', 'direct') }
   let(:pub_message) { double(headers: {}, payload: {}) }
 
   subject { described_class.new connection, domains }

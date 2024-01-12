@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bbk-amqp (1.0.0)
+    bbk-amqp (1.1.0)
       activesupport (>= 6.0)
       bbk-utils (> 1.0.1)
       bunny (>= 2.19.0)
@@ -25,7 +25,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    bbk-app (1.0.0.72899)
+    bbk-app (1.1.0.200186)
       activesupport
       bbk-utils (> 1.0.1)
       timeouter
@@ -63,7 +63,7 @@ GEM
     launchy (2.5.0)
       addressable (~> 2.7)
     minitest (5.15.0)
-    oj (3.13.11)
+    oj (3.16.1)
     parser (3.0.3.2)
       ast (~> 2.4.1)
     path_expander (1.1.0)
@@ -105,7 +105,7 @@ GEM
       virtus (~> 1.0)
     russian (0.6.0)
       i18n (>= 0.5.0)
-    set (1.0.2)
+    set (1.0.3)
     sexp_processor (4.16.0)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -140,7 +140,7 @@ PLATFORMS
 
 DEPENDENCIES
   bbk-amqp!
-  bbk-app (>= 1.0.0)
+  bbk-app (>= 1.1.0.200186)
   bunny-mock
   byebug
   rake

@@ -21,6 +21,8 @@ module BBK
 
       def close: () -> void
 
+      def sync?: () -> bool
+
     end
   end
 end

@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'bunny', '>= 2.19.0'
   spec.add_runtime_dependency 'oj'
 
-  spec.add_development_dependency 'bbk-app', '>= 1.0.0'
+  spec.add_development_dependency 'bbk-app', '>= 1.1.0.200186'
   spec.add_development_dependency 'bunny-mock'
   spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rake'
