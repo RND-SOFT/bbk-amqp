@@ -70,7 +70,7 @@ module BBK
         route_info = domain.call(route)
         logger.debug "Route #{route.inspect} transformed to #{route_info.inspect}"
         message = result.message
-        publish_message(route_info.routing_key, PublishedMessage.new({**message.headers, **route_info.headers}, message.payload), exchange: route_info.exchange)
+        publish_message(route_info.routing_key, PublishedMessage.new({**message.headers, **route_info.headers.select(&:present?)}, message.payload), exchange: route_info.exchange)
       end
 
       # Publish message
