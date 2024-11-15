@@ -3,7 +3,7 @@ PATH
   specs:
     bbk-amqp (1.1.1)
       activesupport (>= 6.0)
-      bbk-app (>= 1.1.1.273312)
+      bbk-app (>= 1.1.1.273338)
       bbk-utils (> 1.0.1)
       bunny (>= 2.19.0)
       oj
@@ -34,9 +34,10 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
-    bbk-app (1.1.1.273312)
-      activesupport
+    bbk-app (1.1.1.273338)
+      activesupport (>= 6.0)
       bbk-utils (> 1.0.1)
+      oj
       timeouter
     bbk-utils (1.1.0.273317)
       activesupport (>= 7.0)
@@ -81,6 +82,7 @@ GEM
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     ostruct (0.6.1)
+    parallel (1.26.3)
     parser (3.0.3.2)
       ast (~> 2.4.1)
     path_expander (1.1.0)
@@ -92,6 +94,8 @@ GEM
       kwalify (~> 0.7.0)
       parser (~> 3.0.0)
       rainbow (>= 2.0, < 4.0)
+    regexp_parser (2.9.2)
+    rexml (3.3.9)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -107,6 +111,18 @@ GEM
     rspec-support (3.13.1)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
+    rubocop (1.24.1)
+      parallel (~> 1.10)
+      parser (>= 3.0.0.0)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml
+      rubocop-ast (>= 1.15.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.15.2)
+      parser (>= 3.0.1.1)
+    ruby-progressbar (1.13.0)
     ruby_parser (3.18.1)
       sexp_processor (~> 4.16)
     rubycritic (4.6.1)
@@ -163,6 +179,7 @@ DEPENDENCIES
   rake
   rspec
   rspec_junit_formatter
+  rubocop
   rubycritic
   simplecov
   simplecov-console

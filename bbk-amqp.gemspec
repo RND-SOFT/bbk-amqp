@@ -18,14 +18,17 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'activesupport', '>= 6.0'
   spec.add_runtime_dependency 'bunny', '>= 2.19.0'
   spec.add_runtime_dependency 'oj'
+
+  spec.add_runtime_dependency 'bbk-app', '>= 1.1.1.273338'
   spec.add_runtime_dependency 'bbk-utils', '> 1.0.1'
-  spec.add_runtime_dependency 'bbk-app', '>= 1.1.1.273312'
 
   spec.add_development_dependency 'bunny-mock'
-  spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
+
+  spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rspec_junit_formatter'
+  spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubycritic'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'simplecov-console'
