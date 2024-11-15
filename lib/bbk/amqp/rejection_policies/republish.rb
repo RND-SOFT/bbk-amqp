@@ -12,7 +12,7 @@ module BBK
           @logger = ActiveSupport::TaggedLogging.new(logger).tagged(self.class.name)
         end
 
-        def call(message, error)
+        def call(message, error, *_args, **_kwargs)
           if message.delivery_info[:redelivered] || message.headers.key?(REPUBLISH_COUNTER_KEY)
             republish_message(message, error)
           else

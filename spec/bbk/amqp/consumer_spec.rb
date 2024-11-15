@@ -7,8 +7,10 @@ RSpec.describe BBK::AMQP::Consumer do
   let(:stream_queue) { stream.queue }
   let(:payload) { random_hash }
   let(:props) { random_hash.merge(headers: random_hash) }
+  let(:publisher) { double(BBK::AMQP::Publisher) }
+  let(:rejection_policy) { double }
 
-  subject { described_class.new connection, queue_name: queue_name }
+  subject(:consumer) {   described_class.new connection, queue_name: queue_name, publisher: publisher }
 
   context '#ctor' do
     it 'pass queue_name' do
@@ -53,45 +55,75 @@ RSpec.describe BBK::AMQP::Consumer do
   end
 
   context '#ack' do
-  
     let(:channel) { double }
     let(:delivery_tag) { SecureRandom.uuid }
 
     let(:in_message) do
-      BBK::AMQP::Message.new(OpenStruct.new(protocols: "test"), {channel: channel, delivery_tag: delivery_tag}, {}, {})
+      BBK::AMQP::Message.new(OpenStruct.new(protocols: 'test'),
+                             { channel: channel, delivery_tag: delivery_tag }, {}, {})
     end
 
-    it 'without answer' do
+    it do
       expect(channel).to receive(:ack).with(delivery_tag)
-      subject.ack in_message
+      expect(publisher).not_to receive(:publish)
+
+      expect{ subject.ack in_message }.not_to raise_error
     end
 
-    it 'answer with non configured publisher' do
-      expect do
-        subject.ack in_message, :message_mock
-      end.to raise_error
-    end
+    context 'Send answer throug publisher' do
+      let(:answer) { double(BBK::App::Dispatcher::Result, route: 'route') }
+      it do
+        expect(channel).to receive(:ack).with(delivery_tag)
+        expect(publisher).to receive(:publish).with(answer).and_return(double(value!: true))
 
-    it 'send answer' do
-      expect(channel).to receive(:ack).with(delivery_tag)
-      subject.publisher = double(BBK::AMQP::Publisher)
-      subject.ack in_message, OpenStruct.new(route: :test)
-    end
+        expect{ subject.ack in_message, answer: answer }.not_to raise_error
+      end
 
+      context 'Without publisher' do
+        let(:publisher) { nil }
+
+        it do
+          expect(channel).not_to receive(:ack).with(delivery_tag)
+          expect{ subject.ack in_message, answer: answer }.to raise_error(/Publisher not configured/)
+        end
+      end
+    end
   end
 
-  it '#stop' do
-    subject.run(stream)
-    subscription = subject.instance_variable_get('@subscription')
-    expect(subscription).to receive(:cancel)
-    subject.stop
+  context '#nack' do
+    let(:in_message) { double(BBK::AMQP::Message) }
+    subject(:consumer) do
+      described_class.new connection, queue_name: queue_name, rejection_policy: rejection_policy
+    end
+
+    it {
+      expect(rejection_policy).to receive(:call).with(in_message, 'error', 1, 2, a1: :a1)
+      subject.nack(in_message, 1, 2, error: 'error', a1: :a1)
+    }
   end
 
-  it '#close' do
-    subject.run(stream)
-    channel = subject.instance_variable_get('@channel')
-    expect(channel).to receive(:close)
-    subject.close
+  describe '#stop' do
+    before { subject.run(stream) }
+
+    it do
+      subscription = subject.instance_variable_get('@subscription')
+      expect(subscription).to receive(:cancel)
+      subject.stop
+    end
+
+    it { expect{ subject.stop }.to change{ subject.instance_variable_get('@subscription') }.to(nil) }
+  end
+
+  describe '#close' do
+    before { subject.run(stream) }
+
+    it do
+      channel = subject.instance_variable_get('@channel')
+      expect(channel).to receive(:close)
+      subject.close
+    end
+
+    it { expect{ subject.close }.to change{ subject.instance_variable_get('@channel') }.to(nil) }
   end
 end
 

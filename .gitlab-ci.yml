@@ -29,10 +29,10 @@ variables:
       - .coverage
       - coverage
 
-ruby-3.0:
+ruby-3.2:
   extends: .test
   variables:
-    CASE: '3.0'
+    CASE: '3.2'
   
 # steep:
 #   image: rnds/ruby:3.0-test

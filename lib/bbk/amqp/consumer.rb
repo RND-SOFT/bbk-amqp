@@ -102,8 +102,8 @@ module BBK
 
       # Nack incoming message
       # @param incoming [BBK::AMQP::Message] nack procesing message
-      def nack(incoming, *args, error: nil, **_kwargs)
-        rejection_policy.call(incoming, error)
+      def nack(incoming, *args, error: nil, **kwargs)
+        rejection_policy.call(incoming, error, *args, **kwargs)
       end
 
       # stop consuming messages
