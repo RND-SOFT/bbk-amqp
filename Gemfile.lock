@@ -34,7 +34,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
-    bbk-app (1.1.1.273338)
+    bbk-app (1.1.1.273627)
       activesupport (>= 6.0)
       bbk-utils (> 1.0.1)
       oj
@@ -44,7 +44,7 @@ GEM
       russian
     benchmark (0.4.0)
     bigdecimal (3.1.8)
-    bunny (2.19.0)
+    bunny (2.23.0)
       amq-protocol (~> 2.3, >= 2.3.1)
       sorted_set (~> 1, >= 1.0.2)
     bunny-mock (1.7.0)
