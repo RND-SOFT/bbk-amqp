@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'bbk/app/dispatcher/message'
 
 module BBK
@@ -27,7 +28,7 @@ module BBK
       end
 
       def reply_to
-        headers[:reply_to]
+        headers[:reply_to] || user_id
       end
 
       def user_id
@@ -40,6 +41,10 @@ module BBK
 
       def protocol
         consumer&.protocols&.first
+      end
+
+      def inspect # :nodoc:
+        "#<#{self.class.name} @consumer=#{consumer.class.name}, @delivery_info=#{delivery_info.except(:message_consumer).inspect}, @headers=#{headers.inspect}, @properties=#{@properties.inspect}>"
       end
 
     end
